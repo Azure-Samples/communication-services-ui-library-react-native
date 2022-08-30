@@ -1,57 +1,175 @@
-# Project Name
+![Hero Image](/mobile-ui-library-hero-image.png)
 
-(short, 1-3 sentenced, description of the project)
+# Azure Communication UI Mobile Library for React Native
+
+![node](https://img.shields.io/badge/node-%3E%3D14.0.0-brightgreen)
+
+This project demonstrates the integration of Azure Communication UI library into a React Native that utilizes the native Azure Communication UI library and Azure Communication Services to build a calling experience that features both voice and video calling.
 
 ## Features
 
-This project framework provides the following features:
+Please refer to our native [UI Library overview](https://docs.microsoft.com/en-us/azure/communication-services/concepts/ui-library/ui-library-overview?pivots=platform-mobile)
 
-* Feature 1
-* Feature 2
-* ...
+## Prerequisites 
 
-## Getting Started
+An Azure account with an active subscription. Create an account for free. 
+A deployed Communication Services resource. Create a Communication Services resource. 
+An Authentication Endpoint that will return the Azure Communication Services Token. See example or clone the code. 
 
-### Prerequisites
+Node, Watchman, and React Native CLI: please refer to [React Native environment setup guide](https://reactnative.dev/docs/environment-setup). 
 
-(ideally very short, if any)
+Yarn: refer to [installation guide](https://classic.yarnpkg.com/lang/en/docs/install)
 
-- OS
-- Library version
-- ...
+iOS: Xcode, CocoaPods: refer to [iOS requirements for UI library](https://github.com/Azure/communication-ui-library-ios#requirements)
 
-### Installation
+Android: Android Studio, JDK: refer to [Android prerequisites](https://github.com/Azure/communication-ui-library-android#prerequisites)
 
-(ideally very short)
+Link to Authentication Endpoint Sample: [link](https://docs.microsoft.com/en-us/azure/communication-services/quickstarts/identity/quick-create-identity)
 
-- npm install [package name]
-- mvn install
-- ...
+## Run Sample App
 
-### Quickstart
-(Add steps to get up and running quickly)
+Navigate to `AzureCommunicationUIDemoApp/`:
 
-1. git clone [repository clone url]
-2. cd [repository name]
-3. ...
+1. Run `yarn install`
+
+Install iOS app dependencies:
+1. In Terminal, navigate to `AzureCommunicationUIDemoApp/ios/`:
+2. Run `pod install --repo-update`
+
+Build android app dependencies:
+1. In Terminal, navigate to `AzureCommunicationUIDemoApp/android/`:
+2. Run `./gradlew build`
+
+Navigate back to `AzureCommunicationUIDemoApp/`
+1. Run `yarn react-native start`
+2. Open another Terminal, navigate to `AzureCommunicationUIDemoApp/` folder, and run `yarn react-native run-ios` or `yarn react-native run-android`
+ 
+Alternatively, you can also run the iOS app by launching Xcode from the `.xcworkspace` file, and run the app with scheme `AzureCommunicationUIDemoApp` on your simulator or iOS device. To run Android app, you can also launch Android Studio and run on Android emulator or Android device after sycning up grade project.
+
+## Key Sample Highlights
+To integrate the native UI Library with React Native in this sample, a few key steps were taken as described below:
+ 
+### iOS 
+
+After installing the package and dependencies with CocoaPods from the step above, modify the Podfile in the `/ios` filder as such:
+```ruby
+platform :ios, '14.0' 
+target 'AzureCommunicationUIDemoApp' do 
+  use_frameworks! 
+  pod 'AzureCommunicationUICalling', '1.0.0' 
+  ... 
+
+  # Note: disable the line below since we've enabled use_frameworks! 
+  # use_flipper!() 
+  ... 
+end 
+``` 
+
+Navigate to the `ios/` folder and open the `.xcworkspace` file with Xcode. 
+
+Set iOS Deployment Target in Build Settings for the main project to minimum iOS 14.0: 
+
+![ae0f2bf7-17f3-435c-828a-e7bfaf1b3e2e](https://user-images.githubusercontent.com/9044372/180568611-71d671c2-6bd4-4542-9d66-87fc9da8eddd.jpg)
+
+Request access to the microphone, camera, etc. 
+To access the device's hardware, update your app's Information Property List (`Info.plist`). Set the associated value to a `string` that will be included in the dialog the system uses to request access from the user. 
+ 
+Right-click the `Info.plist` entry of the project tree and select **Open As** > **Source Code**. Add the following lines the top level `<dict>` section, and then save the file. 
+```xml
+<key>NSCameraUsageDescription</key> 
+<string></string> 
+<key>NSMicrophoneUsageDescription</key> 
+<string></string> 
+```
+
+To verify requesting the permission is added correctly, view the `Info.plist` as **Open As** > **Property List** and should expect to see the following:
+
+![abcca137-6463-4e9a-8db4-b68df6db5ce8](https://user-images.githubusercontent.com/9044372/180568964-71348562-e9a6-4a5e-847e-537e58e376ce.jpg)
+
+Turn off Bitcode 
+Set `Enable Bitcode` option to `No` in the project `Build Settings`. To find the setting, you have to change the filter from `Basic` to `All`, you can also use the search bar on the right. 
+
+![MicrosoftTeams-image](https://user-images.githubusercontent.com/9044372/180569028-f3d86bdf-7016-4f37-8c3f-49332b0c7ef3.png)
+ 
+### Android 
+
+In your app level (**app folder**) `build.gradle`, add the following lines to the dependencies and android sections.
+
+```groovy
+android {
+    ...
+    packagingOptions {
+        pickFirst  'META-INF/*'
+    }
+    ...
+}
+```
+
+```groovy
+dependencies {
+    ...
+    implementation 'com.azure.android:azure-communication-ui-calling:+'
+    ...
+}
+```
+
+In your project gradle scripts add following lines to `repositories`. For `Android Studio (2020.*)` the `repositories` are in `settings.gradle` `dependencyResolutionManagement(Gradle version 6.8 or greater)`. If you are using old versions of `Android Studio (4.*)` then the `repositories` will be in project level `build.gradle` `allprojects{}`.
+
+```groovy
+repositories {
+    ...
+    mavenCentral()
+    maven {
+        url "https://pkgs.dev.azure.com/MicrosoftDeviceSDK/DuoSDK-Public/_packaging/Duo-SDK-Feed/maven/v1"
+    }
+    ...
+}
+```
+
+Sync project with gradle files. Either run `./gradlew build` or open the project in Android Studio (Android Studio -> File -> Sync Project With Gradle Files)
 
 
-## Demo
+## Launching Composite
+The React native library supports all the same features as the native [UI composite](https://github.com/Azure/communication-ui-library-android). Call `startCallComposite` on the `RNAzureCommunicationUICalling` module from your React Native Javascript code, wrapping with `try-catch` statement to handle any errors.
 
-A demo app is included to show how to use the project.
+```cs
+try {
+    await RNAzureCommunicationUICalling.startCallComposite(
+        displayName,
+        tokenInput,
+        meetingInput,
+        localAvatarImageResource,
+        selectedLanguage,
+        isRightToLeft,
+        remoteAvatarImageResource
+    );
+} catch (e) {
+   console.log(`startCallComposite error: ${e.message}`)
+} };
+```
 
-To run the demo, follow these steps:
+### Setup group call or Teams meeting options
+Depending on what type of Call/Meeting you would like to setup, use the appropriate meeting input. Replace `meetingInput` with either your group call ID or Teams meeting url.
 
-(Add steps to start up the demo)
+## React native - native app bridging
+In order to support the communication between React Native and native Azure Communication UI library, bridging is needed for both iOS and Android. Please refer to the following bridging file guide for iOS and Android. 
 
-1.
-2.
-3.
+[iOS bridging file guide](AzureCommunicationUIDemoApp/ios/README.md)
 
-## Resources
+[Android bridging file guide](AzureCommunicationUIDemoApp/android/README.md)
 
-(Any additional resources or related projects)
 
-- Link to supporting information
-- Link to similar sample
-- ...
+## FAQ
+### Seeing build error Xcode with M1 Macbooks
+If you are seeing this error when running the iOS app in Xcode, you'd need to switch to Resetta mode:
+
+```cs
+The following build commands failed:
+    CompileSwiftSources normal x86_64 com.apple.xcode.tools.swift.compiler (in target 'AzureCommunicationUICalling' from project 'Pods')
+```
+
+To switch terminal to Rosetta mode:
+* Close terminal completely
+* Open Applications/Utilities in finder
+* GetInfo on Terminal
+* make sure that "Open using Rosetta" is checked 

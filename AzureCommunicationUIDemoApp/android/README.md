@@ -24,17 +24,24 @@ public void startCallComposite(String displayName, String tokenInput, String mee
 After creating `RNAzureCommunicationUICalling`, create another Java file called `RNAzureCommunicationUICallingPackage` in the `AzureCommunicationUIDemoApp` folder. 
  See [RNAzureCommunicationUICallingPackage.java](app/src/main/java/com/azurecommunicationuidemoapp/RNAzureCommunicationUICallingPackage.java)
  
- We need to register our `RNAzureCommunicationUICalling` module in React Native in `RNAzureCommunicationUICallingPackage`to reference it from the javascript end.
+`RNAzureCommunicationUICallingPackage` implements `ReactPackage` which provides us with an interface to register our `RNAzureCommunicationUICalling` module in React Native. This will allow us to reference the module from the javascript end.
  
   ```java
-@Override
-public List <NativeModule> createNativeModules(
-ReactApplicationContext reactContext) {
-  List <NativeModule> modules = new ArrayList < >();
+public class RNAzureCommunicationUICallingPackage implements ReactPackage {
 
-  modules.add(new RNAzureCommunicationUICalling(reactContext));
+    @Override
+    public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
+        return Collections.emptyList();
+    }
 
-  return modules;
+    @Override
+    public List<NativeModule> createNativeModules(
+            ReactApplicationContext reactContext) {
+        List<NativeModule> modules = new ArrayList<>();
+
+        modules.add(new RNAzureCommunicationUICalling(reactContext));
+        return modules;
+    }
 }
   ```
 

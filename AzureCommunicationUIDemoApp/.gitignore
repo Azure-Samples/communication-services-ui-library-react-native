@@ -2,8 +2,18 @@
 #
 .DS_Store
 
+# React Native
+#
+.expo
+__generated__
+
 # Xcode
 #
+!**/*.xcodeproj
+!**/*.pbxproj
+!**/*.xcworkspacedata
+!**/*.xcsettings
+!**/*.xcscheme
 build/
 *.pbxuser
 !default.pbxuser
@@ -20,28 +30,53 @@ DerivedData
 *.hmap
 *.ipa
 *.xcuserstate
+project.xcworkspace
+*.xcodeproj/*
+!*.xcworkspace/contents.xcworkspacedata
+**/.xcode.env.local
+
 
 # Android/IntelliJ
 #
 build/
 .idea
 .gradle
+.gradle/
 local.properties
 *.iml
 *.hprof
+/android/
+
+# Gradle
+#
+.idea/**/gradle.xml
+.idea/**/libraries
 
 # node.js
 #
 node_modules/
 npm-debug.log
+yarn-debug.log
 yarn-error.log
+*.log
 .env
+.vnm
+package-lock.json
+
 
 # BUCK
 buck-out/
 \.buckd/
 *.keystore
 !debug.keystore
+
+# Android Studio
+.project
+.settings
+.classpath
+
+# Watchman
+.watchmanconfig
 
 # fastlane
 #
@@ -59,3 +94,11 @@ buck-out/
 
 # CocoaPods
 /ios/Pods/
+/template/ios/build/
+/template/ios/Pods/
+/template/ios/Podfile.lock
+/packages/rn-tester/Gemfile.lock
+
+# Visual studio
+.vscode
+.vs

@@ -9,11 +9,6 @@ __generated__
 
 # Xcode
 #
-!**/*.xcodeproj
-!**/*.pbxproj
-!**/*.xcworkspacedata
-!**/*.xcsettings
-!**/*.xcscheme
 build/
 *.pbxuser
 !default.pbxuser
@@ -32,8 +27,10 @@ DerivedData
 *.xcuserstate
 project.xcworkspace
 *.xcodeproj/*
-!*.xcworkspace/contents.xcworkspacedata
 **/.xcode.env.local
+*.xcworkspace/*.xcworkspacedata
+*.xcworkspace
+.watchmanconfig
 
 
 # Android/IntelliJ

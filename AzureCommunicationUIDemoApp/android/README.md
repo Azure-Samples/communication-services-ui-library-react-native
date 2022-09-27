@@ -5,19 +5,22 @@
 
 To allow the React Native javascript end to access a funciton, wrap it with `@ReactMethod`. This will allow the javascript end to call the function which will be used to launch the native UI Library. 
 
- 
+Here we create a method `startCallComposite` and launch the calling compsite within it. We then wrap the method with `@ReactMethod` to allow the JavaScript end to be able to call this function which will then launch our calling composite.
+
  ```java
 @ReactMethod
-public void startCallComposite() {
+public void startCallComposite(String displayName, String tokenInput, String meetingInput, ReadableMap localAvatarImageResource, String selectedLanguage, boolean isRightToLeft, ReadableMap remoteAvatarImageResource, Promise promise) {
 
   CallComposite callComposite = new CallCompositeBuilder().build();
+  
+  ...
   
   //lauching native calling composite
   callComposite.launch(context, remoteOptions);
 }
  ```
-We create a method `startCallComposite` and launch the calling compsite within it. We then wrap the method with `@ReactMethod` to allow the JavaScript end to be able to call this function which will then launch our calling composite.
- 
+
+For the the full `startCallComposite` function, see [RNAzureCommunicationUICalling.java](https://github.com/Azure-Samples/communication-services-ui-library-react-native/blob/main/AzureCommunicationUIDemoApp/android/app/src/main/java/com/azurecommunicationuidemoapp/RNAzureCommunicationUICalling.java#L61)
  
 
 After creating `RNAzureCommunicationUICalling`, create another Java file called `RNAzureCommunicationUICallingPackage` in the `AzureCommunicationUIDemoApp` folder. 

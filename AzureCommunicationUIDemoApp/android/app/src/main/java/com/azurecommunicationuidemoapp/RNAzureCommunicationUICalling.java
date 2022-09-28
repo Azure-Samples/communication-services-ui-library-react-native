@@ -45,7 +45,7 @@ import okhttp3.Response;
 
 public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
 
-    private static final String TAG = "RNAzureCommunicationUICalling";
+    private static final String TAG = "RNAzureCallingUI";
     String mToken = "";
 
     RNAzureCommunicationUICalling(ReactApplicationContext context) {
@@ -75,6 +75,12 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
         }
         promise.resolve(wArr);
     }
+     
+    @ReactMethod
+    public void addListener(String eventName) {}
+    
+    @ReactMethod
+    public void removeListeners(Integer count) {}
 
     public void launchComposite(String displayName, String meetingInput, ReadableMap localAvatarImageResource, String selectedLanguage, boolean isRightToLeft, ReadableMap remoteAvatarImageResource, Promise promise) {
         Context context = getCurrentActivity();

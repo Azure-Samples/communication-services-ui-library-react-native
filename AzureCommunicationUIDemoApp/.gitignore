@@ -32,7 +32,6 @@ project.xcworkspace
 *.xcworkspace
 .watchmanconfig
 
-
 # Android/IntelliJ
 #
 build/
@@ -95,6 +94,7 @@ buck-out/
 /template/ios/Pods/
 /template/ios/Podfile.lock
 /packages/rn-tester/Gemfile.lock
+Podfile.lock
 
 # Visual studio
 .vscode

@@ -160,7 +160,7 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
             guard let remoteAvatar = remoteAvatar, let remoteAvatarImage = RCTConvert.uiImage(remoteAvatar) else {
                 return
             }
-            RemoteParticipantAvatarHelper.onRemoteParticipantJoined(to: callComposite,
+            RNCallCompositeRemoteParticipantAvatarHelper.onRemoteParticipantJoined(to: callComposite,
                                                                     identifiers: identifiers,
                                                                     remoteAvatar: remoteAvatarImage)
         }
@@ -178,7 +178,7 @@ enum RNCallCompositeConnectionError: Error {
     }
 }
 
-struct RemoteParticipantAvatarHelper {
+struct RNCallCompositeRemoteParticipantAvatarHelper {
     private static func getRemoteParticipantId(_ identifier: CommunicationIdentifier) -> String? {
         switch identifier {
         case is CommunicationUserIdentifier:
@@ -215,10 +215,10 @@ struct RemoteParticipantAvatarHelper {
                               for: identifier) { result in
                 switch result {
                 case .success:
-                    print("::::RemoteParticipantAvatarHelper::onRemoteParticipantJoined::success")
+                    print("::::RNCallCompositeRemoteParticipantAvatarHelper::onRemoteParticipantJoined::success")
                     break
                 case .failure(let error):
-                    print("::::RemoteParticipantAvatarHelper::onRemoteParticipantJoined::failure \(error)")
+                    print("::::RNCallCompositeRemoteParticipantAvatarHelper::onRemoteParticipantJoined::failure \(error)")
                 }
             }
         }

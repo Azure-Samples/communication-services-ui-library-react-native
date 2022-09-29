@@ -109,9 +109,9 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
             }
             resolve(nil)
         } else {
-            reject(DemoError.invalidToken.getErrorCode(),
+            reject(RNCallCompositeConnectionError.invalidToken.getErrorCode(),
                    "Token is invalid",
-                   DemoError.invalidToken)
+                   RNCallCompositeConnectionError.invalidToken)
         }
     }
 
@@ -124,13 +124,13 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
             if let communicationTokenCredential = try? CommunicationTokenCredential(withOptions: communicationTokenRefreshOptions) {
                 return communicationTokenCredential
             } else {
-                throw DemoError.invalidToken
+                throw RNCallCompositeConnectionError.invalidToken
             }
         } else {
             if let communicationTokenCredential = try? CommunicationTokenCredential(token: tokenInput) {
                 return communicationTokenCredential
             } else {
-                throw DemoError.invalidToken
+                throw RNCallCompositeConnectionError.invalidToken
             }
         }
     }
@@ -167,7 +167,7 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
     }
 }
 
-enum DemoError: Error {
+enum RNCallCompositeConnectionError: Error {
     case invalidToken
 
     func getErrorCode() -> String {

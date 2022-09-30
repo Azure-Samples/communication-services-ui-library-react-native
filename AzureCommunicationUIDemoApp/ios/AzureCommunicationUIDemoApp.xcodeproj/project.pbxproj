@@ -11,12 +11,10 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		1B5C13D0287E3A27007CA534 /* RemoteParticipantAvatarHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B5C13CF287E3A27007CA534 /* RemoteParticipantAvatarHelper.swift */; };
 		1FB5C63A0A000596520ED222 /* Pods_AzureCommunicationUIDemoApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42C56FDFD33EA711E76AD7E2 /* Pods_AzureCommunicationUIDemoApp.framework */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		980E8BB72792C79B00B08A2B /* RNAzureCommunicationUICalling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 980E8BB62792C79B00B08A2B /* RNAzureCommunicationUICalling.swift */; };
 		980E8BB92792CD0100B08A2B /* RNAzureCommunicationUICalling.m in Sources */ = {isa = PBXBuildFile; fileRef = 980E8BB82792CD0100B08A2B /* RNAzureCommunicationUICalling.m */; };
-		98C7EDA62795FDD100FE348A /* DemoError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98C7EDA52795FDD100FE348A /* DemoError.swift */; };
 		C81489C51CAAC8CF51EA67A7 /* Pods_AzureCommunicationUIDemoApp_AzureCommunicationUIDemoAppTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C607800A156124E53E8FC73 /* Pods_AzureCommunicationUIDemoApp_AzureCommunicationUIDemoAppTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -40,7 +38,6 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = AzureCommunicationUIDemoApp/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = AzureCommunicationUIDemoApp/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = AzureCommunicationUIDemoApp/main.m; sourceTree = "<group>"; };
-		1B5C13CF287E3A27007CA534 /* RemoteParticipantAvatarHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteParticipantAvatarHelper.swift; sourceTree = "<group>"; };
 		1EDE08962FA36EF7A17EC94C /* Pods-AzureCommunicationUIDemoApp-AzureCommunicationUIDemoAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AzureCommunicationUIDemoApp-AzureCommunicationUIDemoAppTests.release.xcconfig"; path = "Target Support Files/Pods-AzureCommunicationUIDemoApp-AzureCommunicationUIDemoAppTests/Pods-AzureCommunicationUIDemoApp-AzureCommunicationUIDemoAppTests.release.xcconfig"; sourceTree = "<group>"; };
 		258596B9858EF9BA08F86452 /* Pods-AzureCommunicationUIDemoApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AzureCommunicationUIDemoApp.release.xcconfig"; path = "Target Support Files/Pods-AzureCommunicationUIDemoApp/Pods-AzureCommunicationUIDemoApp.release.xcconfig"; sourceTree = "<group>"; };
 		31E322F2CC1CEADA4D9EDCAB /* Pods-AzureCommunicationUIDemoApp-AzureCommunicationUIDemoAppTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AzureCommunicationUIDemoApp-AzureCommunicationUIDemoAppTests.debug.xcconfig"; path = "Target Support Files/Pods-AzureCommunicationUIDemoApp-AzureCommunicationUIDemoAppTests/Pods-AzureCommunicationUIDemoApp-AzureCommunicationUIDemoAppTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -51,7 +48,6 @@
 		980E8BB52792C79A00B08A2B /* AzureCommunicationUIDemoApp-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AzureCommunicationUIDemoApp-Bridging-Header.h"; sourceTree = "<group>"; };
 		980E8BB62792C79B00B08A2B /* RNAzureCommunicationUICalling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNAzureCommunicationUICalling.swift; sourceTree = "<group>"; };
 		980E8BB82792CD0100B08A2B /* RNAzureCommunicationUICalling.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNAzureCommunicationUICalling.m; sourceTree = "<group>"; };
-		98C7EDA52795FDD100FE348A /* DemoError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoError.swift; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -103,8 +99,6 @@
 				13B07FB71A68108700A75B9A /* main.m */,
 				980E8BB82792CD0100B08A2B /* RNAzureCommunicationUICalling.m */,
 				980E8BB62792C79B00B08A2B /* RNAzureCommunicationUICalling.swift */,
-				98C7EDA52795FDD100FE348A /* DemoError.swift */,
-				1B5C13CF287E3A27007CA534 /* RemoteParticipantAvatarHelper.swift */,
 				980E8BB52792C79A00B08A2B /* AzureCommunicationUIDemoApp-Bridging-Header.h */,
 			);
 			name = AzureCommunicationUIDemoApp;
@@ -383,9 +377,7 @@
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				980E8BB72792C79B00B08A2B /* RNAzureCommunicationUICalling.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
-				1B5C13D0287E3A27007CA534 /* RemoteParticipantAvatarHelper.swift in Sources */,
 				980E8BB92792CD0100B08A2B /* RNAzureCommunicationUICalling.m in Sources */,
-				98C7EDA62795FDD100FE348A /* DemoError.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

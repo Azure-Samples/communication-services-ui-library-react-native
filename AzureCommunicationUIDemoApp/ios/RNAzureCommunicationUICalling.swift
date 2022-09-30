@@ -5,6 +5,7 @@
 
 import AzureCommunicationUICalling
 import AzureCommunicationCalling
+import AzureCommunicationCommon
 import UIKit
 import SwiftUI
 
@@ -108,9 +109,9 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
             }
             resolve(nil)
         } else {
-            reject(DemoError.invalidToken.getErrorCode(),
+            reject(RNCallCompositeConnectionError.invalidToken.getErrorCode(),
                    "Token is invalid",
-                   DemoError.invalidToken)
+                   RNCallCompositeConnectionError.invalidToken)
         }
     }
 
@@ -123,13 +124,13 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
             if let communicationTokenCredential = try? CommunicationTokenCredential(withOptions: communicationTokenRefreshOptions) {
                 return communicationTokenCredential
             } else {
-                throw DemoError.invalidToken
+                throw RNCallCompositeConnectionError.invalidToken
             }
         } else {
             if let communicationTokenCredential = try? CommunicationTokenCredential(token: tokenInput) {
                 return communicationTokenCredential
             } else {
-                throw DemoError.invalidToken
+                throw RNCallCompositeConnectionError.invalidToken
             }
         }
     }
@@ -159,9 +160,68 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
             guard let remoteAvatar = remoteAvatar, let remoteAvatarImage = RCTConvert.uiImage(remoteAvatar) else {
                 return
             }
-            RemoteParticipantAvatarHelper.onRemoteParticipantJoined(to: callComposite,
+            RNCallCompositeRemoteParticipantAvatarHelper.onRemoteParticipantJoined(to: callComposite,
                                                                     identifiers: identifiers,
                                                                     remoteAvatar: remoteAvatarImage)
         }
     }
 }
+
+enum RNCallCompositeConnectionError: Error {
+    case invalidToken
+
+    func getErrorCode() -> String {
+        switch self {
+        case .invalidToken:
+            return CallCompositeErrorCode.tokenExpired
+        }
+    }
+}
+
+struct RNCallCompositeRemoteParticipantAvatarHelper {
+    private static func getRemoteParticipantId(_ identifier: CommunicationIdentifier) -> String? {
+        switch identifier {
+        case is CommunicationUserIdentifier:
+            return (identifier as? CommunicationUserIdentifier)?.identifier
+        case is UnknownIdentifier:
+            return (identifier as? UnknownIdentifier)?.identifier
+        case is PhoneNumberIdentifier:
+            return (identifier as? PhoneNumberIdentifier)?.phoneNumber
+        case is MicrosoftTeamsUserIdentifier:
+            return (identifier as? MicrosoftTeamsUserIdentifier)?.userId
+        default:
+            return nil
+        }
+    }
+
+    static func onRemoteParticipantJoined(to callComposite: CallComposite,
+                                          identifiers: [CommunicationIdentifier],
+                                          remoteAvatar: UIImage? = nil) {
+        let avatars = ["cat", "fox", "koala", "monkey", "mouse", "octopus"]
+        for identifier in identifiers {
+            let id = getRemoteParticipantId(identifier)
+            let nameIdValue = id != nil ? "\(id?.suffix(4) ?? "")" : ""
+            var avatarImage: UIImage?
+            var selectedAvatarName = ""
+            if let lastSymbol = id?.last {
+                let index = Int((lastSymbol.asciiValue ?? 0 ) % 6)
+                selectedAvatarName = avatars[index]
+                avatarImage = UIImage(named: selectedAvatarName)
+            }
+            let displayName = selectedAvatarName.isEmpty ? nameIdValue : "\(selectedAvatarName) \(nameIdValue)"
+            let participantViewData = ParticipantViewData(avatar: remoteAvatar ?? avatarImage,
+                                                          displayName: displayName)
+            callComposite.set(remoteParticipantViewData: participantViewData,
+                              for: identifier) { result in
+                switch result {
+                case .success:
+                    print("::::RNCallCompositeRemoteParticipantAvatarHelper::onRemoteParticipantJoined::success")
+                    break
+                case .failure(let error):
+                    print("::::RNCallCompositeRemoteParticipantAvatarHelper::onRemoteParticipantJoined::failure \(error)")
+                }
+            }
+        }
+    }
+}
+

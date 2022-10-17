@@ -179,7 +179,7 @@ To switch terminal to Rosetta mode:
 ### SDK location not found error for Android
 If you have this problem when you run the react-native project, you can open the android project with Android Studio.
 
-If this does not help, in the `android` folder create a file with following name `local.properties`
+If this does not help, in the `android` folder create a file with following name `local.properties` and the following line: 
 
 In Windows:
 ```ruby

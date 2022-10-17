@@ -175,3 +175,18 @@ To switch terminal to Rosetta mode:
 * Open Applications/Utilities in finder
 * GetInfo on Terminal
 * make sure that "Open using Rosetta" is checked 
+
+### SDK location not found error for Android
+If you have this problem when you run the react-native project, you can open the android project with Android Studio.
+
+If this does not help, in the `android` folder create a file with following name `local.properties`
+
+In Windows:
+```ruby
+sdk.dir=C:\\Users\\UserName\\AppData\\Local\\Android\\sdk
+```
+
+In MacOS:
+```ruby
+sdk.dir = /Users/USERNAME/Library/Android/sdk
+```

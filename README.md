@@ -159,34 +159,3 @@ In order to support the communication between React Native and native Azure Comm
 [iOS bridging file guide](AzureCommunicationUIDemoApp/ios/README.md)
 
 [Android bridging file guide](AzureCommunicationUIDemoApp/android/README.md)
-
-
-## FAQ
-### Seeing build error Xcode with M1 Macbooks
-If you are seeing this error when running the iOS app in Xcode, you'd need to switch to Resetta mode:
-
-```cs
-The following build commands failed:
-    CompileSwiftSources normal x86_64 com.apple.xcode.tools.swift.compiler (in target 'AzureCommunicationUICalling' from project 'Pods')
-```
-
-To switch terminal to Rosetta mode:
-* Close terminal completely
-* Open Applications/Utilities in finder
-* GetInfo on Terminal
-* make sure that "Open using Rosetta" is checked 
-
-### SDK location not found error for Android
-If you have this problem when you run the react-native project, you can open the android project with Android Studio.
-
-If this does not help, in the `android` folder create a file with following name `local.properties` and the following line: 
-
-In Windows:
-```ruby
-sdk.dir=C:\\Users\\UserName\\AppData\\Local\\Android\\sdk
-```
-
-In MacOS:
-```ruby
-sdk.dir = /Users/USERNAME/Library/Android/sdk
-```

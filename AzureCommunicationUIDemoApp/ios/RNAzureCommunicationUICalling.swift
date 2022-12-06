@@ -39,6 +39,8 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
                                   tokenInput: String,
                                   meetingInput: String,
                                   localAvatar: AnyObject?,
+                                  title: String?,
+                                  subtitle: String?,
                                   languageCode: String,
                                   isRightToLeft: Bool,
                                   remoteAvatar: AnyObject?,
@@ -49,6 +51,8 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
                                      tokenInput: tokenInput,
                                      meetingInput: meetingInput,
                                      localAvatar: localAvatar,
+                                     title: title,
+                                     subtitle: subtitle,
                                      languageCode: languageCode,
                                      isRightToLeft: isRightToLeft,
                                      remoteAvatar: remoteAvatar,
@@ -61,6 +65,8 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
                                      tokenInput: String,
                                      meetingInput: String,
                                      localAvatar: AnyObject?,
+                                     title: String?,
+                                     subtitle: String?,
                                      languageCode: String,
                                      isRightToLeft: Bool = false,
                                      remoteAvatar: AnyObject?,
@@ -88,11 +94,19 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
         callComposite.events.onRemoteParticipantJoined = onRemoteParticipantJoinedHandler
 
         var localOptions: LocalOptions? = nil
-        if let localAvatar = localAvatar {
+        var participantViewData: ParticipantViewData? = nil
+        var setupViewData: SetupScreenViewData? = nil
+
+        if let localAvatar = localAvatar  {
             let avatar = RCTConvert.uiImage(localAvatar)
-            let participantViewData = ParticipantViewData(avatar: avatar, displayName: displayName)
-            localOptions = LocalOptions(participantViewData: participantViewData)
+            participantViewData = ParticipantViewData(avatar: avatar, displayName: displayName)
         }
+
+        if let title = title {
+            setupViewData = SetupScreenViewData(title: title, subtitle: subtitle)
+        }
+
+        localOptions = LocalOptions(participantViewData: participantViewData, setupScreenViewData: setupViewData)
 
         if let communicationTokenCredential = try? getTokenCredential(tokenInput: tokenInput) {
             if let url = URL(string: meetingInput),

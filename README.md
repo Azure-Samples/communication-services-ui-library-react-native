@@ -141,6 +141,8 @@ try {
         tokenInput,
         meetingInput,
         localAvatarImageResource,
+        title,
+        subtitle,
         selectedLanguage,
         isRightToLeft,
         remoteAvatarImageResource

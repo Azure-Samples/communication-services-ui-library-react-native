@@ -14,8 +14,8 @@ RCT_EXTERN_METHOD(startCallComposite:(NSString *)displayName
                   tokenInput:(nonnull NSString *)tokenInput
                   meetingInput:(nonnull NSString *)meetingInput
                   localAvatar:(nullable NSDictionary *)localAvatar
-                  title:(nonnull NSString *)languageCode
-                  subtitle:(nonnull NSString *)languageCode
+                  title:(nullable NSString *)languageCode
+                  subtitle:(nullable NSString *)languageCode
                   languageCode:(nonnull NSString *)languageCode
                   isRightToLeft:(nonnull BOOL) isRightToLeft
                   remoteAvatar:(nullable NSDictionary *)remoteAvatar

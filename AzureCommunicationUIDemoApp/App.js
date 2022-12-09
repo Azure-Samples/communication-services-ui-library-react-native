@@ -32,6 +32,8 @@ const App = () => {
   function HomeScreen({ navigation }) {
     const [tokenInput, onChangeTokenInput] = useState('');
     const [displayName, onChangeDisplayName] = useState('');
+    const [title, onChangeTitle] = useState('');
+    const [subtitle, onChangeSubtitle] = useState('');
     const [meetingInput, onChangeMeetingInput] = useState('');
     const [isRightToLeft, onChangeIsRightToLeft] = useState(false);
     const [localAvatar, onLocalAvatarSet] = useState('');
@@ -111,6 +113,8 @@ const App = () => {
           tokenInput,
           meetingInput,
           localAvatarImageResource,
+          title,
+          subtitle,
           selectedLanguage,
           isRightToLeft,
           remoteAvatarImageResource
@@ -243,6 +247,23 @@ const App = () => {
                 </Pressable>
               </View>
               <Text style={styles.modalTitleText}>UI Library - React Native Sample - Settings</Text>
+              <View style={styles.settingsSectionContainerView}>
+                <Text style={styles.settingsHeaderText}>Setup Screen View Data</Text>
+                <TextInput
+                  style={styles.textInput}
+                  onChangeText={onChangeTitle}
+                  value={title}
+                  placeholderTextColor={"#6E6E6E"}
+                  placeholder="Navigation Bar Title"
+                />
+                <TextInput
+                  style={styles.textInput}
+                  onChangeText={onChangeSubtitle}
+                  value={subtitle}
+                  placeholderTextColor={"#6E6E6E"}
+                  placeholder="Navigation Bar Subtitle"
+                />
+              </View>
               <View style={styles.settingsSectionContainerView}>
                 <Text style={styles.settingsHeaderText}>Localization</Text>
                 <RNPickerSelect

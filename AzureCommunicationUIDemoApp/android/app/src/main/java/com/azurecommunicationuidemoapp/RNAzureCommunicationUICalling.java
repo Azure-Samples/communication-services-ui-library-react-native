@@ -19,6 +19,7 @@ import com.azure.android.communication.ui.calling.models.CallCompositeJoinLocato
 import com.azure.android.communication.ui.calling.models.CallCompositeLocalOptions;
 import com.azure.android.communication.ui.calling.models.CallCompositeLocalizationOptions;
 import com.azure.android.communication.ui.calling.models.CallCompositeParticipantViewData;
+import com.azure.android.communication.ui.calling.models.CallCompositeSetupScreenViewData;
 import com.azure.android.communication.ui.calling.models.CallCompositeRemoteOptions;
 import com.azure.android.communication.ui.calling.models.CallCompositeSupportedLocale;
 import com.azure.android.communication.ui.calling.models.CallCompositeTeamsMeetingLinkLocator;
@@ -58,12 +59,12 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void startCallComposite(String displayName, String tokenInput, String meetingInput, ReadableMap localAvatarImageResource, String selectedLanguage, boolean isRightToLeft, ReadableMap remoteAvatarImageResource, Promise promise) {
+    public void startCallComposite(String displayName, String tokenInput, String meetingInput, ReadableMap localAvatarImageResource, String title, String subtitle, String selectedLanguage, boolean isRightToLeft, ReadableMap remoteAvatarImageResource, Promise promise) {
         if (URLUtil.isValidUrl(tokenInput.trim())) {
-            getCommunicationToken(tokenInput, displayName, meetingInput, localAvatarImageResource, selectedLanguage, isRightToLeft, remoteAvatarImageResource, promise);
+            getCommunicationToken(tokenInput, displayName, meetingInput, localAvatarImageResource, title, subtitle, selectedLanguage, isRightToLeft, remoteAvatarImageResource, promise);
         } else {
             mToken = tokenInput;
-            launchComposite(displayName, meetingInput, localAvatarImageResource, selectedLanguage, isRightToLeft, remoteAvatarImageResource, promise);
+            launchComposite(displayName, meetingInput, localAvatarImageResource, title, subtitle, selectedLanguage, isRightToLeft, remoteAvatarImageResource, promise);
         }
     }
 
@@ -82,7 +83,7 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
     @ReactMethod
     public void removeListeners(Integer count) {}
 
-    public void launchComposite(String displayName, String meetingInput, ReadableMap localAvatarImageResource, String selectedLanguage, boolean isRightToLeft, ReadableMap remoteAvatarImageResource, Promise promise) {
+    public void launchComposite(String displayName, String meetingInput, ReadableMap localAvatarImageResource, String title, String subtitle, String selectedLanguage, boolean isRightToLeft, ReadableMap remoteAvatarImageResource, Promise promise) {
         Context context = getCurrentActivity();
 
 
@@ -132,6 +133,9 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
                         communicationTokenCredential,
                         displayName);
 
+
+                CallCompositeLocalOptions localOptions = new CallCompositeLocalOptions();
+
                 if (localAvatarImageResource != null) {
                     URL url = new URL(localAvatarImageResource.getString("uri"));
                     Bitmap avatarImageBitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
@@ -139,13 +143,20 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
                     CallCompositeParticipantViewData participantViewData = new CallCompositeParticipantViewData()
                             .setDisplayName(displayName)
                             .setAvatarBitmap(avatarImageBitmap);
+                    
+                    
+                    localOptions.setParticipantViewData(participantViewData);
 
-                    CallCompositeLocalOptions dataOptions = new CallCompositeLocalOptions(participantViewData);
-                    callComposite.launch(context, remoteOptions, dataOptions);
-
-                } else {
-                    callComposite.launch(context, remoteOptions);
                 }
+                
+                if (title != null) {
+                    CallCompositeSetupScreenViewData setupViewData = new CallCompositeSetupScreenViewData()
+                        .setTitle(title)
+                        .setSubtitle(subtitle);
+                    localOptions.setSetupScreenViewData(setupViewData);
+                }
+                
+                callComposite.launch(context, remoteOptions, localOptions);
 
             } else {
                 CallCompositeJoinLocator locator = new CallCompositeGroupCallLocator(UUID.fromString(meetingInput));
@@ -154,6 +165,7 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
                         locator,
                         communicationTokenCredential,
                         displayName);
+                CallCompositeLocalOptions localOptions = new CallCompositeLocalOptions();
 
                 if (localAvatarImageResource != null) {
                     URL url = new URL(localAvatarImageResource.getString("uri"));
@@ -162,14 +174,20 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
                     CallCompositeParticipantViewData participantViewData = new CallCompositeParticipantViewData()
                             .setDisplayName(displayName)
                             .setAvatarBitmap(avatarImageBitmap);
+                    
+                    
+                    localOptions.setParticipantViewData(participantViewData);
 
-                    CallCompositeLocalOptions dataOptions = new CallCompositeLocalOptions(participantViewData);
-
-                    callComposite.launch(context, remoteOptions, dataOptions);
-
-                } else {
-                    callComposite.launch(context, remoteOptions);
                 }
+                
+                if (title != null) {
+                    CallCompositeSetupScreenViewData setupViewData = new CallCompositeSetupScreenViewData()
+                        .setTitle(title)
+                        .setSubtitle(subtitle);
+                    localOptions.setSetupScreenViewData(setupViewData);
+                }
+                
+                callComposite.launch(context, remoteOptions, localOptions);
             }
 
             promise.resolve(null);
@@ -182,7 +200,7 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
         return mToken;
     }
 
-    private void getCommunicationToken(String tokenInput, String displayName, String meetingInput, ReadableMap localAvatarImageResource, String selectedLanguage, boolean isRightToLeft, ReadableMap remoteAvatarImageResource, Promise promise) {
+    private void getCommunicationToken(String tokenInput, String displayName, String meetingInput, ReadableMap localAvatarImageResource, String title, String subtitle, String selectedLanguage, boolean isRightToLeft, ReadableMap remoteAvatarImageResource, Promise promise) {
         Thread thread = new Thread(() -> {
             try {
                 OkHttpClient client = new OkHttpClient();
@@ -196,7 +214,7 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
                 mToken = json.getString("token");
 
                 new Handler(Looper.getMainLooper()).post(() -> {
-                    launchComposite(displayName, meetingInput, localAvatarImageResource, selectedLanguage, isRightToLeft, remoteAvatarImageResource, promise);
+                    launchComposite(displayName, meetingInput, localAvatarImageResource, title, subtitle, selectedLanguage, isRightToLeft, remoteAvatarImageResource, promise);
                 });
 
             } catch (Exception e) {

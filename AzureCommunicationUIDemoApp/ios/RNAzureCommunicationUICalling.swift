@@ -35,44 +35,57 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
         resolve(localeStrings)
     }
 
-    @objc func startCallComposite(_ displayName: String,
-                                  tokenInput: String,
-                                  meetingInput: String,
-                                  localAvatar: AnyObject?,
-                                  title: String?,
-                                  subtitle: String?,
-                                  languageCode: String,
-                                  isRightToLeft: Bool,
-                                  remoteAvatar: AnyObject?,
-                                  resolver resolve: @escaping RCTPromiseResolveBlock,
-                                  rejecter reject: @escaping RCTPromiseRejectBlock) {
+    @objc func startCallComposite(_ localOptions: NSDictionary,
+                                    localAvatar: AnyObject?,
+                                    remoteOptions: NSDictionary,
+                                    remoteAvatar: AnyObject?,
+                                    localizationOptions: NSDictionary,
+                                    resolver resolve: @escaping RCTPromiseResolveBlock,
+                                    rejecter reject: @escaping RCTPromiseRejectBlock) {
+
+        guard let localOptionsDict = localOptions as? [String: Any], 
+              let remoteOptionsDict = remoteOptions as? [String: Any], 
+              let localizationOptionsDict = localizationOptions as? [String: Any] else {
+            return
+        }
+
+        // required remote options
+        guard let tokenInput = remoteOptionsDict["token"] as? String, 
+              let meetingInput = remoteOptionsDict["meetingURL"] as? String else {
+            return
+        }
+
+        // required localization options
+        guard let languageCode = localizationOptionsDict["locale"] as? String else {
+            return
+        }           
+
         DispatchQueue.main.async {
-            self._startCallComposite(displayName: displayName,
+            self._startCallComposite(displayName: localOptionsDict["displayName"] as? String
                                      tokenInput: tokenInput,
                                      meetingInput: meetingInput,
                                      localAvatar: localAvatar,
-                                     title: title,
-                                     subtitle: subtitle,
+                                     title: localOptionsDict["title"] as? String,
+                                     subtitle: localOptionsDict["subtitle"] as? String,
                                      languageCode: languageCode,
-                                     isRightToLeft: isRightToLeft,
+                                     isRightToLeft: localizationOptionsDict["locale"] as? Bool ?? false,
                                      remoteAvatar: remoteAvatar,
                                      resolver: resolve,
                                      rejecter: reject)
         }
     }
 
-    private func _startCallComposite(displayName: String,
+    private func _startCallComposite(displayName: String?,
                                      tokenInput: String,
                                      meetingInput: String,
                                      localAvatar: AnyObject?,
                                      title: String?,
                                      subtitle: String?,
                                      languageCode: String,
-                                     isRightToLeft: Bool = false,
+                                     isRightToLeft: Bool,
                                      remoteAvatar: AnyObject?,
                                      resolver resolve: @escaping RCTPromiseResolveBlock,
                                      rejecter reject: @escaping RCTPromiseRejectBlock) {
-        
         var localizationConfig: LocalizationOptions?
         let layoutDirection: LayoutDirection = isRightToLeft ? .rightToLeft : .leftToRight
         let locale = Locale(identifier: languageCode.isEmpty ? "en" : languageCode)

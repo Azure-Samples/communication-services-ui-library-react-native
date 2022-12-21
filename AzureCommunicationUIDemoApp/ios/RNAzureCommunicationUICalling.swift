@@ -49,25 +49,23 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
             return
         }
 
-        // required remote options
+        // required options
         guard let tokenInput = remoteOptionsDict["token"] as? String, 
-              let meetingInput = remoteOptionsDict["meetingURL"] as? String else {
+              let meetingInput = remoteOptionsDict["meeting"] as? String else {
+            reject(RNCallCompositeConnectionError.invalidInput.getErrorCode(),
+                   "Token and Meeting info cannot be empty",
+                   RNCallCompositeConnectionError.invalidInput)
             return
         }
 
-        // required localization options
-        guard let languageCode = localizationOptionsDict["locale"] as? String else {
-            return
-        }           
-
         DispatchQueue.main.async {
-            self._startCallComposite(displayName: localOptionsDict["displayName"] as? String
+            self._startCallComposite(displayName: localOptionsDict["displayName"] as? String,
                                      tokenInput: tokenInput,
                                      meetingInput: meetingInput,
                                      localAvatar: localAvatar,
                                      title: localOptionsDict["title"] as? String,
                                      subtitle: localOptionsDict["subtitle"] as? String,
-                                     languageCode: languageCode,
+                                     languageCode: localizationOptionsDict["locale"] as? String ?? "en",
                                      isRightToLeft: localizationOptionsDict["locale"] as? Bool ?? false,
                                      remoteAvatar: remoteAvatar,
                                      resolver: resolve,
@@ -86,6 +84,7 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
                                      remoteAvatar: AnyObject?,
                                      resolver resolve: @escaping RCTPromiseResolveBlock,
                                      rejecter reject: @escaping RCTPromiseRejectBlock) {
+        
         var localizationConfig: LocalizationOptions?
         let layoutDirection: LayoutDirection = isRightToLeft ? .rightToLeft : .leftToRight
         let locale = Locale(identifier: languageCode.isEmpty ? "en" : languageCode)
@@ -196,11 +195,14 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
 
 enum RNCallCompositeConnectionError: Error {
     case invalidToken
+    case invalidInput
 
     func getErrorCode() -> String {
         switch self {
         case .invalidToken:
             return CallCompositeErrorCode.tokenExpired
+        case .invalidInput:
+            return CallCompositeErrorCode.callJoin
         }
     }
 }

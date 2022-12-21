@@ -72,7 +72,7 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
         
         // remote options
         String tokenInput = remoteOptions.getString("token");
-        String meetingInput = remoteOptions.getString("meetingURL");
+        String meetingInput = remoteOptions.getString("meeting");
 
         // localization options
         String selectedLanguage = localizationOptions.getString("locale");

@@ -113,7 +113,7 @@ const App = () => {
           {"displayName": displayName, "title": title, "subtitle": subtitle},
           localAvatarImageResource,
           // remote options
-          {"token": tokenInput, "meetingURL": meetingInput},
+          {"token": tokenInput, "meeting": meetingInput},
           remoteAvatarImageResource,
           // localization options
           {"locale": selectedLanguage, "layout": isRightToLeft} 

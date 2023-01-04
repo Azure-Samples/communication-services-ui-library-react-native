@@ -59,7 +59,25 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void startCallComposite(String displayName, String tokenInput, String meetingInput, ReadableMap localAvatarImageResource, String title, String subtitle, String selectedLanguage, boolean isRightToLeft, ReadableMap remoteAvatarImageResource, Promise promise) {
+    public void startCallComposite(ReadableMap localOptions, 
+                                   ReadableMap localAvatarImageResource, 
+                                   ReadableMap remoteOptions, 
+                                   ReadableMap remoteAvatarImageResource, 
+                                   ReadableMap localizationOptions, 
+                                   Promise promise) {
+        // local options
+        String displayName = localOptions.getString("displayName");
+        String title = localOptions.getString("title");
+        String subtitle = localOptions.getString("subtitle");
+        
+        // remote options
+        String tokenInput = remoteOptions.getString("token");
+        String meetingInput = remoteOptions.getString("meeting");
+
+        // localization options
+        String selectedLanguage = localizationOptions.getString("locale");
+        boolean isRightToLeft = localizationOptions.getBoolean("layout");
+        
         if (URLUtil.isValidUrl(tokenInput.trim())) {
             getCommunicationToken(tokenInput, displayName, meetingInput, localAvatarImageResource, title, subtitle, selectedLanguage, isRightToLeft, remoteAvatarImageResource, promise);
         } else {

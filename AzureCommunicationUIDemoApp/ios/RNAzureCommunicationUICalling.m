@@ -10,15 +10,11 @@
 
 RCT_EXTERN_METHOD(tokenRefresher:(nullable NSString *)token)
 
-RCT_EXTERN_METHOD(startCallComposite:(NSString *)displayName
-                  tokenInput:(nonnull NSString *)tokenInput
-                  meetingInput:(nonnull NSString *)meetingInput
+RCT_EXTERN_METHOD(startCallComposite:(NSDictionary *)localOptions
                   localAvatar:(nullable NSDictionary *)localAvatar
-                  title:(nullable NSString *)languageCode
-                  subtitle:(nullable NSString *)languageCode
-                  languageCode:(nonnull NSString *)languageCode
-                  isRightToLeft:(nonnull BOOL) isRightToLeft
+                  remoteOptions:(NSDictionary *)remoteOptions
                   remoteAvatar:(nullable NSDictionary *)remoteAvatar
+                  localizationOptions:(NSDictionary *)localizationOptions
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 

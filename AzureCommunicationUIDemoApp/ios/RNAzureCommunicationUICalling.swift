@@ -35,40 +35,52 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
         resolve(localeStrings)
     }
 
-    @objc func startCallComposite(_ displayName: String,
-                                  tokenInput: String,
-                                  meetingInput: String,
-                                  localAvatar: AnyObject?,
-                                  title: String?,
-                                  subtitle: String?,
-                                  languageCode: String,
-                                  isRightToLeft: Bool,
-                                  remoteAvatar: AnyObject?,
-                                  resolver resolve: @escaping RCTPromiseResolveBlock,
-                                  rejecter reject: @escaping RCTPromiseRejectBlock) {
+    @objc func startCallComposite(_ localOptions: NSDictionary,
+                                    localAvatar: AnyObject?,
+                                    remoteOptions: NSDictionary,
+                                    remoteAvatar: AnyObject?,
+                                    localizationOptions: NSDictionary,
+                                    resolver resolve: @escaping RCTPromiseResolveBlock,
+                                    rejecter reject: @escaping RCTPromiseRejectBlock) {
+
+        guard let localOptionsDict = localOptions as? [String: Any], 
+              let remoteOptionsDict = remoteOptions as? [String: Any], 
+              let localizationOptionsDict = localizationOptions as? [String: Any] else {
+            return
+        }
+
+        // required options
+        guard let tokenInput = remoteOptionsDict["token"] as? String, 
+              let meetingInput = remoteOptionsDict["meeting"] as? String else {
+            reject(RNCallCompositeConnectionError.invalidInput.getErrorCode(),
+                   "Token and Meeting info cannot be empty",
+                   RNCallCompositeConnectionError.invalidInput)
+            return
+        }
+
         DispatchQueue.main.async {
-            self._startCallComposite(displayName: displayName,
+            self._startCallComposite(displayName: localOptionsDict["displayName"] as? String,
                                      tokenInput: tokenInput,
                                      meetingInput: meetingInput,
                                      localAvatar: localAvatar,
-                                     title: title,
-                                     subtitle: subtitle,
-                                     languageCode: languageCode,
-                                     isRightToLeft: isRightToLeft,
+                                     title: localOptionsDict["title"] as? String,
+                                     subtitle: localOptionsDict["subtitle"] as? String,
+                                     languageCode: localizationOptionsDict["locale"] as? String ?? "en",
+                                     isRightToLeft: localizationOptionsDict["locale"] as? Bool ?? false,
                                      remoteAvatar: remoteAvatar,
                                      resolver: resolve,
                                      rejecter: reject)
         }
     }
 
-    private func _startCallComposite(displayName: String,
+    private func _startCallComposite(displayName: String?,
                                      tokenInput: String,
                                      meetingInput: String,
                                      localAvatar: AnyObject?,
                                      title: String?,
                                      subtitle: String?,
                                      languageCode: String,
-                                     isRightToLeft: Bool = false,
+                                     isRightToLeft: Bool,
                                      remoteAvatar: AnyObject?,
                                      resolver resolve: @escaping RCTPromiseResolveBlock,
                                      rejecter reject: @escaping RCTPromiseRejectBlock) {
@@ -183,11 +195,14 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
 
 enum RNCallCompositeConnectionError: Error {
     case invalidToken
+    case invalidInput
 
     func getErrorCode() -> String {
         switch self {
         case .invalidToken:
             return CallCompositeErrorCode.tokenExpired
+        case .invalidInput:
+            return CallCompositeErrorCode.callJoin
         }
     }
 }

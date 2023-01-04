@@ -123,17 +123,19 @@ The React native library supports all the same features as the native [UI compos
 ```cs
 try {
     await RNAzureCommunicationUICalling.startCallComposite(
-        displayName,
-        tokenInput,
-        meetingInput,
-        localAvatarImageResource,
-        selectedLanguage,
-        isRightToLeft,
-        remoteAvatarImageResource
-    );
-} catch (e) {
-   console.log(`startCallComposite error: ${e.message}`)
-} };
+       // local options
+       {"displayName": displayName, "title": title, "subtitle": subtitle},
+       localAvatarImageResource,
+       // remote options
+       {"token": tokenInput, "meeting": meetingInput},
+       remoteAvatarImageResource,
+       // localization options
+       {"locale": selectedLanguage, "layout": isRightToLeft} 
+     );
+   } catch (e) {
+     console.log(`startCallComposite error: ${e.message}`)
+   }
+};
 ```
 
 ### Setup group call or Teams meeting options

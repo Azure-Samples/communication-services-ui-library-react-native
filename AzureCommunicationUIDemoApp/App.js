@@ -109,15 +109,14 @@ const App = () => {
         const localAvatarImageResource = resolveAvatarSource(localAvatar);
         const remoteAvatarImageResource = resolveAvatarSource(remoteAvatar);
         await RNAzureCommunicationUICalling.startCallComposite(
-          displayName,
-          tokenInput,
-          meetingInput,
+          // local options
+          {"displayName": displayName, "title": title, "subtitle": subtitle},
           localAvatarImageResource,
-          title,
-          subtitle,
-          selectedLanguage,
-          isRightToLeft,
-          remoteAvatarImageResource
+          // remote options
+          {"token": tokenInput, "meeting": meetingInput},
+          remoteAvatarImageResource,
+          // localization options
+          {"locale": selectedLanguage, "layout": isRightToLeft} 
         );
       } catch (e) {
         Alert.alert('Error', e.message, [{ text: 'Dismiss' }]);

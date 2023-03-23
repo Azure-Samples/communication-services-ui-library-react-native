@@ -6,7 +6,7 @@ platform :ios, '14.0'
 
 target 'AzureCommunicationUIDemoApp' do
   use_frameworks!
-  pod 'AzureCommunicationUICalling', '1.1.0'
+  pod 'AzureCommunicationUICalling', '1.2.0'
 
   
   config = use_native_modules!

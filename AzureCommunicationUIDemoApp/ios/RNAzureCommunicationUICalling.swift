@@ -34,6 +34,28 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
         let localeStrings = SupportedLocale.values.map { $0.identifier }
         resolve(localeStrings)
     }
+    
+    @objc func getDebugInfo(_ resolve: @escaping RCTPromiseResolveBlock,
+                            rejecter reject: @escaping RCTPromiseRejectBlock) {
+        let callHistoryRecords = NSMutableArray()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
+        
+        let callComposite = CallComposite()
+        callComposite.debugInfo.callHistoryRecords.forEach {
+            let callIDs = NSMutableArray()
+            $0.callIds.forEach { callIDs.add($0) }
+            let record = NSMutableDictionary()
+            record.setValue(dateFormatter.string(from: $0.callStartedOn), forKey: "callStartedOn")
+            record.setValue(callIDs, forKey: "callIds")
+            callHistoryRecords.add(record)
+        }
+        
+        let result: NSDictionary = NSMutableDictionary()
+        result.setValue(callHistoryRecords, forKey: "callHistoryRecords")
+        
+        resolve(result)
+    }
 
     @objc func startCallComposite(_ localOptions: NSDictionary,
                                     localAvatar: AnyObject?,

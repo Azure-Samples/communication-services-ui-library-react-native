@@ -58,7 +58,7 @@ After installing the package and dependencies with CocoaPods from the step above
 platform :ios, '14.0' 
 target 'AzureCommunicationUIDemoApp' do 
   use_frameworks! 
-  pod 'AzureCommunicationUICalling', '1.1.0' 
+  pod 'AzureCommunicationUICalling', '1.2.0' 
   ... 
 
   # Note: disable the line below since we've enabled use_frameworks! 
@@ -110,7 +110,7 @@ android {
 ```groovy
 dependencies {
     ...
-    implementation 'com.azure.android:azure-communication-ui-calling:+'
+    implementation 'com.azure.android:azure-communication-ui-calling:1.2.0'
     ...
 }
 ```

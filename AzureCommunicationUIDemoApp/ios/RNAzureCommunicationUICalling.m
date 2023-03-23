@@ -21,4 +21,6 @@ RCT_EXTERN_METHOD(startCallComposite:(NSDictionary *)localOptions
 RCT_EXTERN_METHOD(getSupportedLocales:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(getDebugInfo:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
 @end

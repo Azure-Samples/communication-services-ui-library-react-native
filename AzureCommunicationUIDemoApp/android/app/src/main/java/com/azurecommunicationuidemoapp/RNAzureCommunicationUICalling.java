@@ -14,6 +14,8 @@ import com.azure.android.communication.common.CommunicationTokenCredential;
 import com.azure.android.communication.common.CommunicationTokenRefreshOptions;
 import com.azure.android.communication.ui.calling.CallComposite;
 import com.azure.android.communication.ui.calling.CallCompositeBuilder;
+import com.azure.android.communication.ui.calling.models.CallCompositeCallHistoryRecord;
+import com.azure.android.communication.ui.calling.models.CallCompositeDebugInfo;
 import com.azure.android.communication.ui.calling.models.CallCompositeGroupCallLocator;
 import com.azure.android.communication.ui.calling.models.CallCompositeJoinLocator;
 import com.azure.android.communication.ui.calling.models.CallCompositeLocalOptions;
@@ -30,8 +32,10 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableArray;
+import com.facebook.react.bridge.WritableMap;
 
 import org.json.JSONObject;
+import org.threeten.bp.format.DateTimeFormatter;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -97,6 +101,27 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
      
     @ReactMethod
     public void addListener(String eventName) {}
+
+    @ReactMethod()
+    public void getDebugInfo(Promise promise) {
+        WritableArray wArr = Arguments.createArray();
+        CallComposite callComposite = new CallCompositeBuilder().build();
+        CallCompositeDebugInfo debugInfo = callComposite.getDebugInfo(getCurrentActivity());
+        for (CallCompositeCallHistoryRecord record : debugInfo.getCallHistoryRecords()) {
+            WritableMap recordMap = Arguments.createMap();
+            recordMap.putString("callStartedOn", record.getCallStartedOn().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME));
+            WritableArray callIdsArr = Arguments.createArray();
+            for (String callId: record.getCallIds()) {
+                callIdsArr.pushString(callId);
+            }
+            recordMap.putArray("callIds", callIdsArr);
+            wArr.pushMap(recordMap);
+        }
+
+        WritableMap map = Arguments.createMap();
+        map.putArray("callHistoryRecords", wArr);
+        promise.resolve(map);
+    }
     
     @ReactMethod
     public void removeListeners(Integer count) {}

@@ -68,7 +68,7 @@ const App = () => {
       }
     };
 
-    const resolveAssetSource = require('react-native/Libraries/Image/resolveAssetSource');
+    //const resolveAssetSource = require('react-native/Libraries/Image/resolveAssetSource');
 
     const getsupportedLocales = async () => {
       try {
@@ -83,10 +83,11 @@ const App = () => {
 
     const resolveAvatarSource = (avatar) => {
       let source = '';
+
       if (avatar === 'cat') {
-        source = require('./images/cat.png');
+         source = require('./images/cat.png');
       } else if (avatar === 'fox') {
-        source = require('./images/fox.png');
+         source = require('./images/fox.png');
       } else if (avatar === 'koala') {
         source = require('./images/koala.png');
       } else if (avatar === 'monkey') {
@@ -96,7 +97,7 @@ const App = () => {
       } else if (avatar === 'octopus') {
         source = require('./images/octopus.png');
       }
-      return resolveAssetSource(source)
+      return Image.resolveAssetSource(source)
     }
 
     const startCallComposite = async () => {
@@ -106,15 +107,15 @@ const App = () => {
       // }
 
       try {
-        const localAvatarImageResource = resolveAvatarSource(localAvatar);
-        const remoteAvatarImageResource = resolveAvatarSource(remoteAvatar);
+        //const localAvatarImageResource = resolveAvatarSource(localAvatar);
+        //const remoteAvatarImageResource = resolveAvatarSource(remoteAvatar);
         await RNAzureCommunicationUICalling.startCallComposite(
           // local options
           {"displayName": displayName, "title": title, "subtitle": subtitle},
-          localAvatarImageResource,
+          localAvatar,
           // remote options
           {"token": tokenInput, "meeting": meetingInput},
-          remoteAvatarImageResource,
+          remoteAvatar,
           // localization options
           {"locale": selectedLanguage, "layout": isRightToLeft} 
         );

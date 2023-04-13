@@ -67,9 +67,6 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
         String title = localOptions.getString("title");
         String subtitle = localOptions.getString("subtitle");
 
-        Log.d(TAG, "Local Avatar image resource:: " + localAvatarImageResource);
-        Log.d(TAG, "Remote Avatar image resource:: " + remoteAvatarImageResource);
-
         // remote options
         String tokenInput = remoteOptions.getString("token");
         String meetingInput = remoteOptions.getString("meeting");

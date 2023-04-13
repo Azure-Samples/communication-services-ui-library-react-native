@@ -11,9 +11,9 @@
 RCT_EXTERN_METHOD(tokenRefresher:(nullable NSString *)token)
 
 RCT_EXTERN_METHOD(startCallComposite:(NSDictionary *)localOptions
-                  localAvatar:(nullable NSDictionary *)localAvatar
+                  localAvatar:(nullable NSString *)localAvatar
                   remoteOptions:(NSDictionary *)remoteOptions
-                  remoteAvatar:(nullable NSDictionary *)remoteAvatar
+                  remoteAvatar:(nullable NSString *)remoteAvatar
                   localizationOptions:(NSDictionary *)localizationOptions
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)

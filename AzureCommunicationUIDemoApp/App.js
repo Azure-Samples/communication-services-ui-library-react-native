@@ -68,8 +68,6 @@ const App = () => {
       }
     };
 
-    //const resolveAssetSource = require('react-native/Libraries/Image/resolveAssetSource');
-
     const getsupportedLocales = async () => {
       try {
         const locals = await RNAzureCommunicationUICalling.getSupportedLocales();
@@ -81,25 +79,6 @@ const App = () => {
 
     getsupportedLocales()
 
-    const resolveAvatarSource = (avatar) => {
-      let source = '';
-
-      if (avatar === 'cat') {
-         source = require('./images/cat.png');
-      } else if (avatar === 'fox') {
-         source = require('./images/fox.png');
-      } else if (avatar === 'koala') {
-        source = require('./images/koala.png');
-      } else if (avatar === 'monkey') {
-        source = require('./images/monkey.png');
-      } else if (avatar === 'mouse') {
-        source = require('./images/mouse.png');
-      } else if (avatar === 'octopus') {
-        source = require('./images/octopus.png');
-      }
-      return Image.resolveAssetSource(source)
-    }
-
     const startCallComposite = async () => {
       // if (Platform.OS === 'ios') {
       //   const themeColor = PlatformColor('systemTeal'); // set null for default theme color
@@ -107,8 +86,6 @@ const App = () => {
       // }
 
       try {
-        //const localAvatarImageResource = resolveAvatarSource(localAvatar);
-        //const remoteAvatarImageResource = resolveAvatarSource(remoteAvatar);
         await RNAzureCommunicationUICalling.startCallComposite(
           // local options
           {"displayName": displayName, "title": title, "subtitle": subtitle},

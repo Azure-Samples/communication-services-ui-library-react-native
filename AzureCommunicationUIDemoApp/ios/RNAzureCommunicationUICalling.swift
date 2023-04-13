@@ -36,9 +36,9 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
     }
 
     @objc func startCallComposite(_ localOptions: NSDictionary,
-                                    localAvatar: AnyObject?,
+                                    localAvatar: NSString,
                                     remoteOptions: NSDictionary,
-                                    remoteAvatar: AnyObject?,
+                                    remoteAvatar: NSString,
                                     localizationOptions: NSDictionary,
                                     resolver resolve: @escaping RCTPromiseResolveBlock,
                                     rejecter reject: @escaping RCTPromiseRejectBlock) {
@@ -76,12 +76,12 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
     private func _startCallComposite(displayName: String?,
                                      tokenInput: String,
                                      meetingInput: String,
-                                     localAvatar: AnyObject?,
+                                     localAvatar: NSString,
                                      title: String?,
                                      subtitle: String?,
                                      languageCode: String,
                                      isRightToLeft: Bool,
-                                     remoteAvatar: AnyObject?,
+                                     remoteAvatar: NSString,
                                      resolver resolve: @escaping RCTPromiseResolveBlock,
                                      rejecter reject: @escaping RCTPromiseRejectBlock) {
         
@@ -109,8 +109,8 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
         var participantViewData: ParticipantViewData? = nil
         var setupViewData: SetupScreenViewData? = nil
 
-        if let localAvatar = localAvatar  {
-            let avatar = RCTConvert.uiImage(localAvatar)
+        if isAvatarAvailable(avatarName: localAvatar as String)  {
+            let avatar = UIImage(named: localAvatar as String)
             participantViewData = ParticipantViewData(avatar: avatar, displayName: displayName)
         }
 
@@ -169,6 +169,11 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
         }
     }
     
+    private func isAvatarAvailable(avatarName: String) -> Bool {
+        let avatars = ["cat", "fox", "koala", "monkey", "mouse", "octopus"]
+        return avatars.contains(avatarName)
+    }
+    
     func onError(_ reject: @escaping RCTPromiseRejectBlock) -> ((CallCompositeError) -> Void) {
         return { (error: CallCompositeError) -> Void in
             print("ReactNativeDemoView::getEventsHandler::onError \(error)")
@@ -180,15 +185,15 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
     }
     
     func onRemoteParticipantJoined(_ resolve: @escaping RCTPromiseResolveBlock,
-                                   _ reject: @escaping RCTPromiseRejectBlock) -> ((CallComposite, [CommunicationIdentifier], AnyObject?) -> Void) {
-        return { (callComposite: CallComposite, identifiers: [CommunicationIdentifier], remoteAvatar: AnyObject?) -> Void in
+                                   _ reject: @escaping RCTPromiseRejectBlock) -> ((CallComposite, [CommunicationIdentifier], NSString) -> Void) {
+        return { (callComposite: CallComposite, identifiers: [CommunicationIdentifier], remoteAvatar: NSString) -> Void in
             print("ReactNativeDemoView::getEventsHandler::onRemoteParticipantJoined \(identifiers)")
-            guard let remoteAvatar = remoteAvatar, let remoteAvatarImage = RCTConvert.uiImage(remoteAvatar) else {
+            guard self.isAvatarAvailable(avatarName: remoteAvatar as String) else {
                 return
             }
             RNCallCompositeRemoteParticipantAvatarHelper.onRemoteParticipantJoined(to: callComposite,
                                                                     identifiers: identifiers,
-                                                                    remoteAvatar: remoteAvatarImage)
+                                                                    remoteAvatar: UIImage(named: remoteAvatar as String))
         }
     }
 }

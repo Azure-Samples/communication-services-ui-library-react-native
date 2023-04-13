@@ -58,7 +58,7 @@ After installing the package and dependencies with CocoaPods from the step above
 platform :ios, '14.0' 
 target 'AzureCommunicationUIDemoApp' do 
   use_frameworks! 
-  pod 'AzureCommunicationUICalling', '1.1.0' 
+  pod 'AzureCommunicationUICalling', '1.3.0' 
   ... 
 
   # Note: disable the line below since we've enabled use_frameworks! 
@@ -139,10 +139,10 @@ try {
     await RNAzureCommunicationUICalling.startCallComposite(
        // local options
        {"displayName": displayName, "title": title, "subtitle": subtitle},
-       localAvatarImageResource,
+       localAvatar,
        // remote options
        {"token": tokenInput, "meeting": meetingInput},
-       remoteAvatarImageResource,
+       remoteAvatar,
        // localization options
        {"locale": selectedLanguage, "layout": isRightToLeft} 
      );
@@ -161,3 +161,14 @@ In order to support the communication between React Native and native Azure Comm
 [iOS bridging file guide](AzureCommunicationUIDemoApp/ios/README.md)
 
 [Android bridging file guide](AzureCommunicationUIDemoApp/android/README.md)
+
+## Troubleshooting
+
+If you have updated to the latest XCode and iOS version, you might face build error for iOS. In thase case, 
+
+- Please update your dependencies in `package.json` 
+    - Update react version to 18.0.0
+    - Update react-native to 0.69
+    - Update react-native-communite/picker to react-native-picker/picker with version 2.4.2
+- Delete node_modules and run `yarn install`
+- Navigate to ios folder and run `pod install --repo-update`

@@ -52,6 +52,7 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
 
     private static final String TAG = "RNAzureCallingUI";
     String mToken = "";
+    CallComposite callComposite = null;
 
     RNAzureCommunicationUICalling(ReactApplicationContext context) {
         super(context);
@@ -60,6 +61,13 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
     @Override
     public String getName() {
         return "RNAzureCommunicationUICalling";
+    }
+
+    @ReactMethod
+    public void dismiss() {
+        if (callComposite != null) {
+            callComposite.dismiss();
+        }
     }
 
     @ReactMethod
@@ -98,14 +106,16 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
         }
         promise.resolve(wArr);
     }
-     
+
     @ReactMethod
     public void addListener(String eventName) {}
 
     @ReactMethod()
     public void getDebugInfo(Promise promise) {
         WritableArray wArr = Arguments.createArray();
-        CallComposite callComposite = new CallCompositeBuilder().build();
+        if (callComposite == null) {
+            callComposite = new CallCompositeBuilder().build();
+        }
         CallCompositeDebugInfo debugInfo = callComposite.getDebugInfo(getCurrentActivity());
         for (CallCompositeCallHistoryRecord record : debugInfo.getCallHistoryRecords()) {
             WritableMap recordMap = Arguments.createMap();
@@ -132,7 +142,7 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
 
         int layoutDirection = isRightToLeft ? LayoutDirection.RTL : LayoutDirection.LTR;
 
-        CallComposite callComposite = new CallCompositeBuilder()
+        callComposite = new CallCompositeBuilder()
                 .localization(new CallCompositeLocalizationOptions(Locale.forLanguageTag(selectedLanguage), layoutDirection)).build();
 
 
@@ -167,6 +177,15 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
                 });
             }
 
+            callComposite.addOnCallStateChangedEventHandler((callStateChangedEvent) -> {
+                Log.d(TAG, "================= application is logging call state change =================");
+                Log.d(TAG, callStateChangedEvent.getCode().toString());
+                Log.d(TAG, callComposite.getCallState().toString());
+            });
+
+            callComposite.addOnDismissedEventHandler((dismissedEvent) -> {
+                Log.d(TAG, "================= application is logging call composite dismissed =================");
+            });   
 
             if (URLUtil.isValidUrl(meetingInput.trim())) {
                 CallCompositeJoinLocator locator = new CallCompositeTeamsMeetingLinkLocator(meetingInput);
@@ -186,10 +205,7 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
                     CallCompositeParticipantViewData participantViewData = new CallCompositeParticipantViewData()
                             .setDisplayName(displayName)
                             .setAvatarBitmap(avatarImageBitmap);
-                    
-                    
                     localOptions.setParticipantViewData(participantViewData);
-
                 }
                 
                 if (title != null) {

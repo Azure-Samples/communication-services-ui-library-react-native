@@ -160,16 +160,11 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
 
         int layoutDirection = isRightToLeft ? LayoutDirection.RTL : LayoutDirection.LTR;
 
-<<<<<<< HEAD
-        callComposite = new CallCompositeBuilder()
-                .localization(new CallCompositeLocalizationOptions(Locale.forLanguageTag(selectedLanguage), layoutDirection)).build();
-=======
         CallComposite callComposite = new CallCompositeBuilder()
                 .localization(new CallCompositeLocalizationOptions(Locale.forLanguageTag(selectedLanguage), layoutDirection))
                 .setupScreenOrientation(getCompositeDefinedOrientation(setupOrientation))
                 .callScreenOrientation(getCompositeDefinedOrientation(callOrientation))
                 .build();
->>>>>>> a6d9bc9 (Adding orientation support for Android.)
 
 
         try {

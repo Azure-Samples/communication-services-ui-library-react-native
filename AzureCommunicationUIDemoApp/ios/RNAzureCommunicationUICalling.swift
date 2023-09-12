@@ -64,7 +64,7 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
             guard let callComposite = callComposite else {
                 return
             }
-            callComposite.exit()
+            callComposite.dismiss()
     }
 
     @objc func startCallComposite(_ localOptions: NSDictionary,
@@ -139,7 +139,7 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
             self.onRemoteParticipantJoined(resolve, reject)(callComposite, communicationIds, remoteAvatar)
         }
         callComposite.events.onRemoteParticipantJoined = onRemoteParticipantJoinedHandler
-        callComposite.events.onExited = { dismissedEvent in
+        callComposite.events.onDismissed = { dismissedEvent in
             print("ReactNativeDemoView::getEventsHandler::onDismissed \(dismissedEvent)")
         }
         callComposite.events.onCallStateChanged = { [weak callComposite] callState in
@@ -147,7 +147,7 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
             guard let callComposite = callComposite else {
                 return
             }
-            print("ReactNativeDemoView::getEventsHandler::onCallStateChanged \(callComposite.callStateCode)")
+            print("ReactNativeDemoView::getEventsHandler::onCallStateChanged \(callComposite.callState)")
         }
 
         var localOptions: LocalOptions? = nil

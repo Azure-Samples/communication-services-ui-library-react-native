@@ -213,7 +213,7 @@ dependencies {
         }
     }
 
-    implementation 'com.azure.android:azure-communication-calling:2.4.0'
+    implementation 'com.azure.android:azure-communication-calling:2.5.0'
 
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.10'
     implementation 'androidx.core:core-ktx:1.7.0'

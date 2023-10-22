@@ -48,6 +48,7 @@
 		980E8BB52792C79A00B08A2B /* AzureCommunicationUIDemoApp-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AzureCommunicationUIDemoApp-Bridging-Header.h"; sourceTree = "<group>"; };
 		980E8BB62792C79B00B08A2B /* RNAzureCommunicationUICalling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNAzureCommunicationUICalling.swift; sourceTree = "<group>"; };
 		980E8BB82792CD0100B08A2B /* RNAzureCommunicationUICalling.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNAzureCommunicationUICalling.m; sourceTree = "<group>"; };
+		A46AFAED2AE49AA60035AE98 /* AzureCommunicationUIDemoApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = AzureCommunicationUIDemoApp.entitlements; path = AzureCommunicationUIDemoApp/AzureCommunicationUIDemoApp.entitlements; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -91,6 +92,7 @@
 		13B07FAE1A68108700A75B9A /* AzureCommunicationUIDemoApp */ = {
 			isa = PBXGroup;
 			children = (
+				A46AFAED2AE49AA60035AE98 /* AzureCommunicationUIDemoApp.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -451,6 +453,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = AzureCommunicationUIDemoApp/AzureCommunicationUIDemoApp.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = UBF8T346G9;
 				ENABLE_BITCODE = NO;
@@ -480,6 +483,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = AzureCommunicationUIDemoApp/AzureCommunicationUIDemoApp.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = UBF8T346G9;
 				INFOPLIST_FILE = AzureCommunicationUIDemoApp/Info.plist;

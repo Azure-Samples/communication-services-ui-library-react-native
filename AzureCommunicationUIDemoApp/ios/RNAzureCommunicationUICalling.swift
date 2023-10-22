@@ -8,6 +8,7 @@ import AzureCommunicationCalling
 import AzureCommunicationCommon
 import UIKit
 import SwiftUI
+import CallKit
 
 @objc(RNAzureCommunicationUICalling)
 class RNAzureCommunicationUICalling: RCTEventEmitter {
@@ -164,18 +165,27 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
         }
 
         localOptions = LocalOptions(participantViewData: participantViewData, setupScreenViewData: setupViewData)
+        let cxHandle = CXHandle(type: .generic, value: meetingInput)
+        let cxProvider = CallCompositeCallKitOption.getDefaultCXProviderConfiguration()
+        var remoteInfoDisplayName = "test"
+        let callKitRemoteInfo = CallCompositeCallKitRemoteInfo(displayName: remoteInfoDisplayName,
+                                                               cxHandle: cxHandle)
+        let isCallHoldSupported = true
+        let callKitOptions = CallCompositeCallKitOption()
 
         if let communicationTokenCredential = try? getTokenCredential(tokenInput: tokenInput) {
             if let url = URL(string: meetingInput),
                UIApplication.shared.canOpenURL(url as URL) {
                 let remoteOptions = RemoteOptions(for: .teamsMeeting(teamsLink: meetingInput),
                                                   credential: communicationTokenCredential,
-                                                  displayName: displayName)
+                                                  displayName: displayName,
+                                                  callKitOptions: callKitOptions)
                 callComposite.launch(remoteOptions: remoteOptions, localOptions: localOptions)
             } else {
                 let remoteOptions = RemoteOptions(for: .groupCall(groupId: UUID(uuidString: meetingInput) ?? UUID()),
                                                   credential: communicationTokenCredential,
-                                                  displayName: displayName)
+                                                  displayName: displayName,
+                                                  callKitOptions: callKitOptions)
                 callComposite.launch(remoteOptions: remoteOptions, localOptions: localOptions)
             }
             resolve(nil)

@@ -116,7 +116,10 @@ const App = () => {
           {"token": tokenInput, "meeting": meetingInput},
           remoteAvatarImageResource,
           // localization options
-          {"locale": selectedLanguage, "layout": isRightToLeft} 
+          {"locale": selectedLanguage, "layout": isRightToLeft},
+          // Orientation Option: 
+          //An example on how RN can pass value to Native Platform (Android/iOS) side and use orientation APIs.
+          {"setupOrientation": "PORTRAIT", "callOrientation": "LANDSCAPE"} 
         );
       } catch (e) {
         Alert.alert('Error', e.message, [{ text: 'Dismiss' }]);

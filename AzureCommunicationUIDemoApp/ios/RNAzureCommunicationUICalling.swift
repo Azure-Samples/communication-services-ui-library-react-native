@@ -16,6 +16,7 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
     }
 
     private var tokenRefresherHandler: TokenRefreshHandler?
+    private var callComposite: CallComposite?
 
     override static func requiresMainQueueSetup() -> Bool {
         return false
@@ -41,8 +42,10 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss Z"
         
-        let callComposite = CallComposite()
-        callComposite.debugInfo.callHistoryRecords.forEach {
+        if callComposite == nil {
+             callComposite = CallComposite()
+        }
+        callComposite?.debugInfo.callHistoryRecords.forEach {
             let callIDs = NSMutableArray()
             $0.callIds.forEach { callIDs.add($0) }
             let record = NSMutableDictionary()
@@ -55,6 +58,13 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
         result.setValue(callHistoryRecords, forKey: "callHistoryRecords")
         
         resolve(result)
+    }
+
+    @objc func dismiss() {
+            guard let callComposite = callComposite else {
+                return
+            }
+            callComposite.dismiss()
     }
 
     @objc func startCallComposite(_ localOptions: NSDictionary,
@@ -116,7 +126,10 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
         let callCompositeOptions: CallCompositeOptions
         callCompositeOptions = CallCompositeOptions(localization: localizationConfig)
 
-        let callComposite = CallComposite(withOptions: callCompositeOptions)
+        callComposite = CallComposite(withOptions: callCompositeOptions)
+        guard let callComposite = callComposite else {
+                return
+            }
         callComposite.events.onError = onError(reject)
         
         let onRemoteParticipantJoinedHandler: ([CommunicationIdentifier]) -> Void = { [weak callComposite] communicationIds in
@@ -126,6 +139,16 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
             self.onRemoteParticipantJoined(resolve, reject)(callComposite, communicationIds, remoteAvatar)
         }
         callComposite.events.onRemoteParticipantJoined = onRemoteParticipantJoinedHandler
+        callComposite.events.onDismissed = { dismissedEvent in
+            print("ReactNativeDemoView::getEventsHandler::onDismissed \(dismissedEvent)")
+        }
+        callComposite.events.onCallStateChanged = { [weak callComposite] callState in
+            print("ReactNativeDemoView::getEventsHandler::onCallStateChanged \(callState)")
+            guard let callComposite = callComposite else {
+                return
+            }
+            print("ReactNativeDemoView::getEventsHandler::onCallStateChanged \(callComposite.callState)")
+        }
 
         var localOptions: LocalOptions? = nil
         var participantViewData: ParticipantViewData? = nil

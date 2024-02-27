@@ -23,7 +23,7 @@ import { AvatarsView } from './AvatarsView';
 import RNAzureCommunicationUICalling from './native/RNAzureCommunicationUICalling';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import RNPickerSelect from 'react-native-picker-select';
+//import RNPickerSelect from 'react-native-picker-select';
 
 const Stack = createNativeStackNavigator();
 
@@ -268,7 +268,7 @@ const App = () => {
               </View>
               <View style={styles.settingsSectionContainerView}>
                 <Text style={styles.settingsHeaderText}>Localization</Text>
-                <RNPickerSelect
+                {/* <RNPickerSelect
                   items={
                     localesArray.map(item => {
                       return { label: item, value: item }
@@ -280,7 +280,7 @@ const App = () => {
                   style={pickerSelectStyles}
                   value={selectedLanguage}
                   useNativeAndroidPickerStyle={false}
-                />
+                /> */}
                 <View style={styles.settingsSwitchToggleContainer}>
                   <Text>Is Right to Left</Text>
                   <Switch

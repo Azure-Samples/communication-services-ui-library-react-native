@@ -200,7 +200,7 @@ dependencies {
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
     
-    implementation 'com.azure.android:azure-communication-ui-calling:1.4.0'
+    implementation 'com.azure.android:azure-communication-ui-calling:1.6.0'
 
     implementation "com.microsoft.fluentui:fluentui_others:0.0.21"
     implementation "com.microsoft.fluentui:fluentui_drawer:0.0.21"
@@ -213,7 +213,7 @@ dependencies {
         }
     }
 
-    implementation 'com.azure.android:azure-communication-calling:2.4.0'
+    implementation 'com.azure.android:azure-communication-calling:2.5.0'
 
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.10'
     implementation 'androidx.core:core-ktx:1.7.0'

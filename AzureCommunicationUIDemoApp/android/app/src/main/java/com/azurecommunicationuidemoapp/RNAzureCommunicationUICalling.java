@@ -14,18 +14,22 @@ import com.azure.android.communication.common.CommunicationTokenCredential;
 import com.azure.android.communication.common.CommunicationTokenRefreshOptions;
 import com.azure.android.communication.ui.calling.CallComposite;
 import com.azure.android.communication.ui.calling.CallCompositeBuilder;
+import com.azure.android.communication.ui.calling.models.CallCompositeAudioVideoMode;
 import com.azure.android.communication.ui.calling.models.CallCompositeCallHistoryRecord;
 import com.azure.android.communication.ui.calling.models.CallCompositeDebugInfo;
+import com.azure.android.communication.ui.calling.models.CallCompositeDismissedEvent;
 import com.azure.android.communication.ui.calling.models.CallCompositeGroupCallLocator;
 import com.azure.android.communication.ui.calling.models.CallCompositeJoinLocator;
 import com.azure.android.communication.ui.calling.models.CallCompositeLocalOptions;
 import com.azure.android.communication.ui.calling.models.CallCompositeLocalizationOptions;
+import com.azure.android.communication.ui.calling.models.CallCompositeMultitaskingOptions;
 import com.azure.android.communication.ui.calling.models.CallCompositeParticipantViewData;
 import com.azure.android.communication.ui.calling.models.CallCompositeSetupScreenViewData;
 import com.azure.android.communication.ui.calling.models.CallCompositeRemoteOptions;
 import com.azure.android.communication.ui.calling.models.CallCompositeSupportedLocale;
 import com.azure.android.communication.ui.calling.models.CallCompositeSupportedScreenOrientation;
 import com.azure.android.communication.ui.calling.models.CallCompositeTeamsMeetingLinkLocator;
+import com.azure.android.communication.ui.calling.models.CallCompositeUserReportedIssueEvent;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -164,6 +168,7 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
                 .localization(new CallCompositeLocalizationOptions(Locale.forLanguageTag(selectedLanguage), layoutDirection))
                 .setupScreenOrientation(getCompositeDefinedOrientation(setupOrientation))
                 .callScreenOrientation(getCompositeDefinedOrientation(callOrientation))
+                .multitasking(new CallCompositeMultitaskingOptions(true))
                 .build();
 
 
@@ -180,6 +185,18 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
                 Log.d(TAG, "====================================================================");
 
                 promise.reject(eventHandler.getErrorCode() + " " + eventHandler.getCause().getMessage());
+            });
+
+            callComposite.addOnPictureInPictureChangedEventHandler(eventArgs -> {
+                Log.d(TAG, "addOnMultitaskingStateChangedEventHandler it.isInPictureInPicture: " + eventArgs.isInPictureInPicture());
+            });
+
+            callComposite.addOnUserReportedEventHandler(eventArgs -> {
+                CallCompositeUserReportedIssueEvent event = eventArgs;
+                CallCompositeDebugInfo info = event.getDebugInfo();
+                if(info != null) {
+                    Log.d(TAG, info.toString());
+                }
             });
 
             if (remoteAvatarImageResource != null) {
@@ -235,6 +252,7 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
                         .setSubtitle(subtitle);
                     localOptions.setSetupScreenViewData(setupViewData);
                 }
+                localOptions.setAudioVideoMode(CallCompositeAudioVideoMode.AUDIO_ONLY)
                 
                 callComposite.launch(context, remoteOptions, localOptions);
 
@@ -254,8 +272,7 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
                     CallCompositeParticipantViewData participantViewData = new CallCompositeParticipantViewData()
                             .setDisplayName(displayName)
                             .setAvatarBitmap(avatarImageBitmap);
-                    
-                    
+
                     localOptions.setParticipantViewData(participantViewData);
 
                 }
@@ -266,7 +283,7 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
                         .setSubtitle(subtitle);
                     localOptions.setSetupScreenViewData(setupViewData);
                 }
-                
+                                
                 callComposite.launch(context, remoteOptions, localOptions);
             }
 

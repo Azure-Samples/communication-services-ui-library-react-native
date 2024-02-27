@@ -64,7 +64,7 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
             guard let callComposite = callComposite else {
                 return
             }
-            callComposite.exit()
+        callComposite.dismiss()
     }
 
     @objc func startCallComposite(_ localOptions: NSDictionary,
@@ -124,7 +124,7 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
                                                  layoutDirection: layoutDirection)
         
         let callCompositeOptions: CallCompositeOptions
-        callCompositeOptions = CallCompositeOptions(localization: localizationConfig)
+        callCompositeOptions = CallCompositeOptions(localization: localizationConfig, enableMultitasking: true)
 
         callComposite = CallComposite(withOptions: callCompositeOptions)
         guard let callComposite = callComposite else {
@@ -139,7 +139,7 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
             self.onRemoteParticipantJoined(resolve, reject)(callComposite, communicationIds, remoteAvatar)
         }
         callComposite.events.onRemoteParticipantJoined = onRemoteParticipantJoinedHandler
-        callComposite.events.onExited = { dismissedEvent in
+        callComposite.events.onDismissed = { dismissedEvent in
             print("ReactNativeDemoView::getEventsHandler::onDismissed \(dismissedEvent)")
         }
         callComposite.events.onCallStateChanged = { [weak callComposite] callState in
@@ -147,7 +147,14 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
             guard let callComposite = callComposite else {
                 return
             }
-            print("ReactNativeDemoView::getEventsHandler::onCallStateChanged \(callComposite.callStateCode)")
+            print("ReactNativeDemoView::getEventsHandler::onCallStateChanged \(callComposite.callState)")
+        }
+        callComposite.events.onPictureInPictureChanged = { event in
+            print("ReactNativeDemoView::getEventsHandler::onPictureInPictureChanged \(event)")
+        }
+        callComposite.events.onUserReportedIssue = { event in
+            print("ReactNativeDemoView::getEventsHandler::onUserReportedIssue \(event)")
+            print("ReactNativeDemoView::getEventsHandler::onUserReportedIssue.debugInfo \(event.debugInfo)")
         }
 
         var localOptions: LocalOptions? = nil
@@ -163,7 +170,7 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
             setupViewData = SetupScreenViewData(title: title, subtitle: subtitle)
         }
 
-        localOptions = LocalOptions(participantViewData: participantViewData, setupScreenViewData: setupViewData)
+        localOptions = LocalOptions(participantViewData: participantViewData, setupScreenViewData: setupViewData, audioVideoMode: CallCompositeAudioVideoMode.audioAndVideo)
 
         if let communicationTokenCredential = try? getTokenCredential(tokenInput: tokenInput) {
             if let url = URL(string: meetingInput),

@@ -121,7 +121,7 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
         }
         promise.resolve(wArr);
     }
-     
+
     @ReactMethod
     public void addListener(String eventName) {}
 
@@ -170,7 +170,6 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
                 .callScreenOrientation(getCompositeDefinedOrientation(callOrientation))
                 .multitasking(new CallCompositeMultitaskingOptions(true))
                 .build();
-
 
         try {
             CommunicationTokenRefreshOptions communicationTokenRefreshOptions =

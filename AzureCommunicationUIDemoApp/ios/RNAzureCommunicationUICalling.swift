@@ -64,7 +64,7 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
             guard let callComposite = callComposite else {
                 return
             }
-        callComposite.dismiss()
+            callComposite.dismiss()
     }
 
     @objc func startCallComposite(_ localOptions: NSDictionary,

@@ -1,6 +1,13 @@
-require_relative '../node_modules/react-native/scripts/react_native_pods'
-require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
-source 'https://github.com/CocoaPods/Specs.git'
+#require_relative '../node_modules/react-native/scripts/react_native_pods'
+#require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
+#source 'https://github.com/CocoaPods/Specs.git'
+
+# Resolve react_native_pods.rb with node to allow for hoisting
+require Pod::Executable.execute_command('node', ['-p',
+  'require.resolve(
+    "react-native/scripts/react_native_pods.rb",
+    {paths: [process.argv[1]]},
+  )', __dir__]).strip
 
 platform :ios, '14.0'
 
@@ -10,15 +17,25 @@ source 'https://github.com/CocoaPods/Specs.git'
 
 target 'AzureCommunicationUIDemoApp' do
   use_frameworks!
-  pod 'AzureCommunicationUICalling', '1.6.0-alpha.7'
-
+  pod 'AzureCommunicationUICalling', '1.6.0'
   
   config = use_native_modules!
 
+  # Flags change depending on the env values.
+  flags = get_default_flags()
+
   use_react_native!(
     :path => config[:reactNativePath],
-    # to enable hermes on iOS, change `false` to `true` and then install pods
-    :hermes_enabled => false
+    # Hermes is now enabled by default. Disable by setting this flag to false.
+    :hermes_enabled => flags[:hermes_enabled],
+    :fabric_enabled => flags[:fabric_enabled],
+    # Enables Flipper.
+    #
+    # Note that if you have use_frameworks! enabled, Flipper will not work and
+    # you should disable the next line.
+    # :flipper_configuration => flipper_config,
+    # An absolute path to your application root.
+    :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
   target 'AzureCommunicationUIDemoAppTests' do
@@ -31,6 +48,16 @@ target 'AzureCommunicationUIDemoApp' do
   # Note that if you have use_frameworks! enabled, Flipper will not work and
   # you should disable the next line.
   # use_flipper!()
+
+  pre_install do |installer|
+    installer.pod_targets.each do |pod|
+      if pod.name.eql?('RNScreens')
+        def pod.build_type
+          Pod::BuildType.static_library
+        end
+      end
+    end
+  end
 
   post_install do |installer|
     react_native_post_install(installer)
@@ -55,5 +82,6 @@ target 'AzureCommunicationUIDemoApp' do
         end
       end
     end
+
   end
 end

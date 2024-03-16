@@ -200,7 +200,11 @@ dependencies {
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
     
+<<<<<<< HEAD
     implementation 'com.azure.android:azure-communication-ui-calling:1.6.0'
+=======
+    implementation 'com.azure.android:azure-communication-ui-calling:1.4.0'
+>>>>>>> origin/main
 
     implementation "com.microsoft.fluentui:fluentui_others:0.0.21"
     implementation "com.microsoft.fluentui:fluentui_drawer:0.0.21"

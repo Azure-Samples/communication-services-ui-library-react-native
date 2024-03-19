@@ -251,7 +251,7 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
                         .setSubtitle(subtitle);
                     localOptions.setSetupScreenViewData(setupViewData);
                 }
-                localOptions.setAudioVideoMode(CallCompositeAudioVideoMode.AUDIO_ONLY)
+                localOptions.setAudioVideoMode(CallCompositeAudioVideoMode.AUDIO_ONLY);
                 
                 callComposite.launch(context, remoteOptions, localOptions);
 

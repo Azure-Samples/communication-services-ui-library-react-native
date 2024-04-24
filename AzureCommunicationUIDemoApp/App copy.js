@@ -1,4 +1,10 @@
+//
+//  Copyright (c) Microsoft Corporation. All rights reserved.
+//  Licensed under the MIT License.
+//
+
 import React, { useState } from 'react';
+
 import {
   Alert,
   SafeAreaView,
@@ -15,95 +21,120 @@ import {
 } from 'react-native';
 import { AvatarsView } from './AvatarsView';
 import RNAzureCommunicationUICalling from './native/RNAzureCommunicationUICalling';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+//import RNPickerSelect from 'react-native-picker-select';
+
+const Stack = createNativeStackNavigator();
 
 const App = () => {
-  const [tokenInput, onChangeTokenInput] = useState('');
-  const [displayName, onChangeDisplayName] = useState('');
-  const [title, onChangeTitle] = useState('');
-  const [subtitle, onChangeSubtitle] = useState('');
-  const [meetingInput, onChangeMeetingInput] = useState('');
-  const [isRightToLeft, onChangeIsRightToLeft] = useState(false);
-  const [localAvatar, onLocalAvatarSet] = useState('');
-  const [remoteAvatar, onRemoteAvatarSet] = useState('');
-  const [modalVisible, setModalVisible] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState('en');
-  const [isGroupCall, setIsGroupCall] = useState(true);
-  const [localesArray, setLocalesArray] = useState([]);
-  const toggleIsRightToLeftSwitch = () => onChangeIsRightToLeft(!isRightToLeft);
 
-  const setLocalAvatar = avatar => {
-    if (avatar !== localAvatar) {
-      onLocalAvatarSet(avatar);
-    } else {
-      onLocalAvatarSet('');
+  function HomeScreen({ navigation }) {
+    const [tokenInput, onChangeTokenInput] = useState('');
+    const [displayName, onChangeDisplayName] = useState('');
+    const [title, onChangeTitle] = useState('');
+    const [subtitle, onChangeSubtitle] = useState('');
+    const [meetingInput, onChangeMeetingInput] = useState('');
+    const [isRightToLeft, onChangeIsRightToLeft] = useState(false);
+    const [localAvatar, onLocalAvatarSet] = useState('');
+    const [remoteAvatar, onRemoteAvatarSet] = useState('');
+    const [modalVisible, setModalVisible] = useState(false);
+    const [selectedLanguage, setSelectedLanguage] = useState('en');
+    const [isGroupCall, setIsGroupCall] = useState(true);
+    const [localesArray, setLocalesArray] = useState([]);
+    const toggleIsRightToLeftSwitch = () => onChangeIsRightToLeft(!isRightToLeft);
+
+    React.useLayoutEffect(() => {
+      navigation.setOptions({
+        headerRight: () => (
+          <Button onPress={() => setModalVisible(!modalVisible)} title="Settings" color="#0078D4" />
+        ),
+      });
+    }, [navigation, setModalVisible]);
+
+    const setLocalAvatar = avatar => {
+      if (avatar !== localAvatar) {
+        onLocalAvatarSet(avatar);
+      } else {
+        onLocalAvatarSet('');
+      }
+    };
+
+    const setRemoteAvatar = avatar => {
+      if (avatar !== remoteAvatar) {
+        onRemoteAvatarSet(avatar);
+      } else {
+        onRemoteAvatarSet('');
+      }
+    };
+
+    const resolveAssetSource = require('react-native/Libraries/Image/resolveAssetSource');
+
+    const getsupportedLocales = async () => {
+      try {
+        const locals = await RNAzureCommunicationUICalling.getSupportedLocales();
+        setLocalesArray(locals)
+      } catch (e) {
+        Alert.alert('Error', e.message, [{ text: 'Dismiss' }]);
+      }
     }
-  };
 
-  const setRemoteAvatar = avatar => {
-    if (avatar !== remoteAvatar) {
-      onRemoteAvatarSet(avatar);
-    } else {
-      onRemoteAvatarSet('');
+    getsupportedLocales()
+
+    const resolveAvatarSource = (avatar) => {
+      let source = '';
+      if (avatar === 'cat') {
+        source = require('./images/cat.png');
+      } else if (avatar === 'fox') {
+        source = require('./images/fox.png');
+      } else if (avatar === 'koala') {
+        source = require('./images/koala.png');
+      } else if (avatar === 'monkey') {
+        source = require('./images/monkey.png');
+      } else if (avatar === 'mouse') {
+        source = require('./images/mouse.png');
+      } else if (avatar === 'octopus') {
+        source = require('./images/octopus.png');
+      }
+      return resolveAssetSource(source)
     }
-  };
 
-  const resolveAssetSource = require('react-native/Libraries/Image/resolveAssetSource');
+    const startCallComposite = async () => {
+      // if (Platform.OS === 'ios') {
+      //   const themeColor = PlatformColor('systemTeal'); // set null for default theme color
+      //   RNAzureCommunicationUICalling.setThemeColor(themeColor);
+      // }
 
-  const getsupportedLocales = async () => {
-    try {
-      const locals = await RNAzureCommunicationUICalling.getSupportedLocales();
-      setLocalesArray(locals)
-    } catch (e) {
-      Alert.alert('Error', e.message, [{ text: 'Dismiss' }]);
-    }
-  }
+      try {
+        const localAvatarImageResource = resolveAvatarSource(localAvatar);
+        const remoteAvatarImageResource = resolveAvatarSource(remoteAvatar);
+        await RNAzureCommunicationUICalling.startCallComposite(
+          // local options
+          {"displayName": displayName, "title": title, "subtitle": subtitle},
+          localAvatarImageResource,
+          // remote options
+          {"token": tokenInput, "meeting": meetingInput},
+          remoteAvatarImageResource,
+          // localization options
+          {"locale": selectedLanguage, "layout": isRightToLeft},
+          // Orientation Option: 
+          //An example on how RN can pass value to Native Platform (Android/iOS) side and use orientation APIs.
+          {"setupOrientation": "PORTRAIT", "callOrientation": "LANDSCAPE"} 
+        );
+      } catch (e) {
+        Alert.alert('Error', e.message, [{ text: 'Dismiss' }]);
+      }
+    };
 
-  getsupportedLocales()
+    const changeCallMeetingOption = () => {
+      onChangeMeetingInput('')
+      setIsGroupCall(!isGroupCall)
+    };
 
-  const resolveAvatarSource = (avatar) => {
-    let source = '';
-    if (avatar === 'cat') {
-      source = require('./images/cat.png');
-    } else if (avatar === 'fox') {
-      source = require('./images/fox.png');
-    } else if (avatar === 'koala') {
-      source = require('./images/koala.png');
-    } else if (avatar === 'monkey') {
-      source = require('./images/monkey.png');
-    } else if (avatar === 'mouse') {
-      source = require('./images/mouse.png');
-    } else if (avatar === 'octopus') {
-      source = require('./images/octopus.png');
-    }
-    return resolveAssetSource(source)
-  }
-
-  const startCallComposite = async () => {
-    try {
-      const localAvatarImageResource = resolveAvatarSource(localAvatar);
-      const remoteAvatarImageResource = resolveAvatarSource(remoteAvatar);
-      await RNAzureCommunicationUICalling.startCallComposite(
-        {"displayName": displayName, "title": title, "subtitle": subtitle},
-        localAvatarImageResource,
-        {"token": tokenInput, "meeting": meetingInput},
-        remoteAvatarImageResource,
-        {"locale": selectedLanguage, "layout": isRightToLeft},
-        {"setupOrientation": "PORTRAIT", "callOrientation": "LANDSCAPE"} 
-      );
-    } catch (e) {
-      Alert.alert('Error', e.message, [{ text: 'Dismiss' }]);
-    }
-  };
-
-  const changeCallMeetingOption = () => {
-    onChangeMeetingInput('')
-    setIsGroupCall(!isGroupCall)
-  };
-
-  return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#F8F8F8' }}>
-      <ScrollView contentInsetAdjustmentBehavior="automatic" >
-      <View style={{ flexDirection: "row", margin: 8, backgroundColor: "#FFFFFF" }}>
+    return (
+      <SafeAreaView style={{ flex: 1, backgroundColor: '#F8F8F8' }}>
+        <ScrollView contentInsetAdjustmentBehavior="automatic" >
+          <View style={{ flexDirection: "row", margin: 8, backgroundColor: "#FFFFFF" }}>
             <Pressable
               style={[styles.tabButton, isGroupCall ? styles.buttonOpen : styles.buttonDisabled]}
               disabled={isGroupCall}
@@ -207,7 +238,7 @@ const App = () => {
             setModalVisible(!modalVisible);
           }}
         >
-                   <ScrollView contentInsetAdjustmentBehavior="automatic">
+          <ScrollView contentInsetAdjustmentBehavior="automatic">
             <View style={styles.modalView}>
               <View style={styles.closeContainerView}>
                 <Pressable
@@ -270,11 +301,22 @@ const App = () => {
               </View>
             </View>
           </ScrollView>
-        </Modal>              
-    </SafeAreaView>
+        </Modal>
+      </SafeAreaView>
+    );
+  }
+
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Join"
+          component={HomeScreen}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
-
 
 const styles = StyleSheet.create({
   title: {

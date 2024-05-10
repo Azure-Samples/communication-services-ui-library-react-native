@@ -97,9 +97,11 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
                                      localAvatar: localAvatar,
                                      title: localOptionsDict["title"] as? String,
                                      subtitle: localOptionsDict["subtitle"] as? String,
+                                     leaveCallConfirmationMode: localOptionsDict["leaveCallConfirmationMode"] as? String,
                                      languageCode: localizationOptionsDict["locale"] as? String ?? "en",
                                      isRightToLeft: localizationOptionsDict["locale"] as? Bool ?? false,
                                      remoteAvatar: remoteAvatar,
+                                     disableLeaveCallConfirmationCode
                                      resolver: resolve,
                                      rejecter: reject)
         }
@@ -111,6 +113,7 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
                                      localAvatar: AnyObject?,
                                      title: String?,
                                      subtitle: String?,
+                                     leaveCallConfirmationMode: String?,
                                      languageCode: String,
                                      isRightToLeft: Bool,
                                      remoteAvatar: AnyObject?,
@@ -124,7 +127,8 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
                                                  layoutDirection: layoutDirection)
         
         let callCompositeOptions: CallCompositeOptions
-        callCompositeOptions = CallCompositeOptions(localization: localizationConfig)
+        callCompositeOptions = CallCompositeOptions(localization: localizationConfig,
+        callScreenOptions: CallScreenOptions(controlBarOptions: CallScreenControlBarOptions(leaveCallConfirmationMode: getLeaveCallConfirmationMode(leaveCallConfirmationMode))))
 
         callComposite = CallComposite(withOptions: callCompositeOptions)
         guard let callComposite = callComposite else {
@@ -184,6 +188,18 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
                    "Token is invalid",
                    RNCallCompositeConnectionError.invalidToken)
         }
+    }
+
+    private func getLeaveCallConfirmationMode(mode: String) -> LeaveCallConfirmationMode {
+        switch mode {
+            case "always_enabled": 
+                return LeaveCallConfirmationMode.alwaysEnabled
+            case "always_disabled":
+                return LeaveCallConfirmationMode.alwaysDisabled
+            default:
+                return LeaveCallConfirmationMode.alwaysEnabled
+        }
+        return LeaveCallConfirmationMode.alwaysEnabled
     }
 
     private func getTokenCredential(tokenInput: String) throws -> CommunicationTokenCredential {

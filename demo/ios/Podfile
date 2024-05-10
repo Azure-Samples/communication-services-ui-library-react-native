@@ -27,7 +27,7 @@ end
 
 target 'demo' do
   use_frameworks!
-  pod 'AzureCommunicationUICalling', '1.6.0'
+  pod 'AzureCommunicationUICalling', '1.7.0'
   config = use_native_modules!
 
   # Flags change depending on the env values.

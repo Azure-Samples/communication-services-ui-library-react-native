@@ -112,7 +112,7 @@ const App = () => {
         const remoteAvatarImageResource = resolveAvatarSource(remoteAvatar);
         await RNAzureCommunicationUICalling.startCallComposite(
           // local options
-          {"displayName": displayName, "title": title, "subtitle": subtitle},
+          {"displayName": displayName, "title": title, "subtitle": subtitle, "leaveCallConfirmationMode": "always_disabled"},
           localAvatarImageResource,
           // remote options
           {"token": tokenInput, "meeting": meetingInput},

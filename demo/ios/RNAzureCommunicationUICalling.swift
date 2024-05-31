@@ -99,6 +99,7 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
                                      subtitle: localOptionsDict["subtitle"] as? String,
                                      languageCode: localizationOptionsDict["locale"] as? String ?? "en",
                                      isRightToLeft: localizationOptionsDict["locale"] as? Bool ?? false,
+                                     disableLeaveCallConfirmation: localOptionsDict["disableLeaveCallConfirmation"] as? Bool ?? false,
                                      remoteAvatar: remoteAvatar,
                                      resolver: resolve,
                                      rejecter: reject)
@@ -113,6 +114,7 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
                                      subtitle: String?,
                                      languageCode: String,
                                      isRightToLeft: Bool,
+                                     disableLeaveCallConfirmation: Bool,
                                      remoteAvatar: AnyObject?,
                                      resolver resolve: @escaping RCTPromiseResolveBlock,
                                      rejecter reject: @escaping RCTPromiseRejectBlock) {
@@ -123,8 +125,15 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
         localizationConfig = LocalizationOptions(locale: locale,
                                                  layoutDirection: layoutDirection)
         
+        var callScreenControlBarOptions: CallScreenControlBarOptions?
+        var callScreenOptions: CallScreenOptions?
+        var mode: LeaveCallConfirmationMode = disableLeaveCallConfirmation ? LeaveCallConfirmationMode.alwaysDisabled : LeaveCallConfirmationMode.alwaysEnabled
+
+        callScreenControlBarOptions = CallScreenControlBarOptions(leaveCallConfirmationMode: mode)
+        callScreenOptions = CallScreenOptions(controlBarOptions: callScreenControlBarOptions)
+
         let callCompositeOptions: CallCompositeOptions
-        callCompositeOptions = CallCompositeOptions(localization: localizationConfig)
+        callCompositeOptions = CallCompositeOptions(localization: localizationConfig, callScreenOptions: callScreenOptions)
 
         callComposite = CallComposite(withOptions: callCompositeOptions)
         guard let callComposite = callComposite else {

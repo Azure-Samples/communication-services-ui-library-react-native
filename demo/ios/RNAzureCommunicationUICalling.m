@@ -15,6 +15,7 @@ RCT_EXTERN_METHOD(startCallComposite:(NSDictionary *)localOptions
                   remoteOptions:(NSDictionary *)remoteOptions
                   remoteAvatar:(nullable NSDictionary *)remoteAvatar
                   localizationOptions:(NSDictionary *)localizationOptions
+                  orientationOptions: (nullable NSDictionary *)orientationOptions
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 

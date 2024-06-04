@@ -32,23 +32,23 @@ Link to Authentication Endpoint Sample: [link](https://docs.microsoft.com/en-us/
 
 ## Run Sample App
 
-Navigate to `AzureCommunicationUIDemoApp/`:
+Navigate to `demo/`:
 
 1. Run `yarn install`
 
 Install iOS app dependencies:
-1. In Terminal, navigate to `AzureCommunicationUIDemoApp/ios/`:
+1. In Terminal, navigate to `demo/ios/`:
 2. Run `pod install --repo-update`
 
 Build android app dependencies:
-1. In Terminal, navigate to `AzureCommunicationUIDemoApp/android/`:
+1. In Terminal, navigate to `demo/android/`:
 2. Run `./gradlew build`
 
-Navigate back to `AzureCommunicationUIDemoApp/`
+Navigate back to `demo/`
 1. Run `yarn react-native start`
-2. Open another Terminal, navigate to `AzureCommunicationUIDemoApp/` folder, and run `yarn react-native run-ios` or `yarn react-native run-android`
+2. Open another Terminal, navigate to `demo/` folder, and run `yarn react-native run-ios` or `yarn react-native run-android`
  
-Alternatively, you can also run the iOS app by launching Xcode from the `.xcworkspace` file, and run the app with scheme `AzureCommunicationUIDemoApp` on your simulator or iOS device. 
+Alternatively, you can also run the iOS app by launching Xcode from the `.xcworkspace` file, and run the app with scheme `demo` on your simulator or iOS device. 
 
 To run Android app, you can also launch Android Studio and run on Android emulator or Android device after syncing up gradle. There are two ways to sync gradle either with a command in the android folder`./gradlew build` or via android studio.
 
@@ -60,7 +60,7 @@ To integrate the native UI Library with React Native in this sample, a few key s
 After installing the package and dependencies with CocoaPods from the step above, modify the Podfile in the `/ios` filder as such:
 ```ruby
 platform :ios, '14.0' 
-target 'AzureCommunicationUIDemoApp' do 
+target 'demo' do 
   use_frameworks! 
   pod 'AzureCommunicationUICalling', '1.2.0' 
   ... 
@@ -162,6 +162,6 @@ Depending on what type of Call/Meeting you would like to setup, use the appropri
 ## React native - native app bridging
 In order to support the communication between React Native and native Azure Communication UI library, bridging is needed for both iOS and Android. Please refer to the following bridging file guide for iOS and Android. 
 
-[iOS bridging file guide](AzureCommunicationUIDemoApp/ios/README.md)
+[iOS bridging file guide](demo/ios/README.md)
 
-[Android bridging file guide](AzureCommunicationUIDemoApp/android/README.md)
+[Android bridging file guide](demo/android/README.md)

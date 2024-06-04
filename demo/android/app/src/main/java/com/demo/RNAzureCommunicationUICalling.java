@@ -26,7 +26,10 @@ import com.azure.android.communication.ui.calling.models.CallCompositeMultitaski
 import com.azure.android.communication.ui.calling.models.CallCompositeParticipantViewData;
 import com.azure.android.communication.ui.calling.models.CallCompositeSetupScreenViewData;
 import com.azure.android.communication.ui.calling.models.CallCompositeRemoteOptions;
+import com.azure.android.communication.ui.calling.models.CallCompositeCallScreenControlBarOptions;
+import com.azure.android.communication.ui.calling.models.CallCompositeCallScreenOptions;
 import com.azure.android.communication.ui.calling.models.CallCompositeSupportedLocale;
+import com.azure.android.communication.ui.calling.models.CallCompositeLeaveCallConfirmationMode;
 import com.azure.android.communication.ui.calling.models.CallCompositeSupportedScreenOrientation;
 import com.azure.android.communication.ui.calling.models.CallCompositeTeamsMeetingLinkLocator;
 import com.azure.android.communication.ui.calling.models.CallCompositeUserReportedIssueEvent;
@@ -87,6 +90,7 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
         String displayName = localOptions.getString("displayName");
         String title = localOptions.getString("title");
         String subtitle = localOptions.getString("subtitle");
+        boolean disableLeaveCallConfirmation = localOptions.getBoolean("disableLeaveCallConfirmation");
         
         // remote options
         String tokenInput = remoteOptions.getString("token");
@@ -97,10 +101,10 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
         boolean isRightToLeft = localizationOptions.getBoolean("layout");
         
         if (URLUtil.isValidUrl(tokenInput.trim())) {
-            getCommunicationToken(tokenInput, displayName, meetingInput, localAvatarImageResource, title, subtitle, selectedLanguage, isRightToLeft, remoteAvatarImageResource, orientationOptions, promise);
+            getCommunicationToken(tokenInput, displayName, meetingInput, localAvatarImageResource, title, subtitle, selectedLanguage, isRightToLeft, disableLeaveCallConfirmation, remoteAvatarImageResource, orientationOptions, promise);
         } else {
             mToken = tokenInput;
-            launchComposite(displayName, meetingInput, localAvatarImageResource, title, subtitle, selectedLanguage, isRightToLeft, remoteAvatarImageResource, orientationOptions, promise);
+            launchComposite(displayName, meetingInput, localAvatarImageResource, title, subtitle, selectedLanguage, isRightToLeft, disableLeaveCallConfirmation, remoteAvatarImageResource, orientationOptions, promise);
         }
     }
 
@@ -152,7 +156,7 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
     public void removeListeners(Integer count) {}
 
     public void launchComposite(String displayName, String meetingInput, ReadableMap localAvatarImageResource,
-                                String title, String subtitle, String selectedLanguage, boolean isRightToLeft, ReadableMap remoteAvatarImageResource,
+                                String title, String subtitle, String selectedLanguage, boolean isRightToLeft, boolean disableLeaveCallConfirmation, ReadableMap remoteAvatarImageResource,
                                 ReadableMap orientationOptions,
                                 Promise promise) {
         Context context = getCurrentActivity();
@@ -164,11 +168,22 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
 
         int layoutDirection = isRightToLeft ? LayoutDirection.RTL : LayoutDirection.LTR;
 
+        CallCompositeCallScreenControlBarOptions callScreenControlBarOptions = new CallCompositeCallScreenControlBarOptions();
+        if (disableLeaveCallConfirmation) {
+            callScreenControlBarOptions.setLeaveCallConfirmation(CallCompositeLeaveCallConfirmationMode.ALWAYS_DISABLED);
+        } else {
+            callScreenControlBarOptions.setLeaveCallConfirmation(CallCompositeLeaveCallConfirmationMode.ALWAYS_ENABLED);
+        }
+        
+        CallCompositeCallScreenOptions callScreenOptions = new CallCompositeCallScreenOptions();
+        callScreenOptions.setControlBarOptions(callScreenControlBarOptions);
+
         CallComposite callComposite = new CallCompositeBuilder()
                 .localization(new CallCompositeLocalizationOptions(Locale.forLanguageTag(selectedLanguage), layoutDirection))
                 .setupScreenOrientation(getCompositeDefinedOrientation(setupOrientation))
                 .callScreenOrientation(getCompositeDefinedOrientation(callOrientation))
                 .multitasking(new CallCompositeMultitaskingOptions(true))
+                .callScreenOptions(callScreenOptions)
                 .build();
 
         try {
@@ -297,7 +312,7 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
     }
 
     private void getCommunicationToken(String tokenInput, String displayName, String meetingInput, ReadableMap localAvatarImageResource, String title, String subtitle, String selectedLanguage,
-                                       boolean isRightToLeft, ReadableMap remoteAvatarImageResource,
+                                       boolean isRightToLeft, boolean disableLeaveCallConfirmation, ReadableMap remoteAvatarImageResource,
                                        ReadableMap orientationOptions,
                                        Promise promise) {
         Thread thread = new Thread(() -> {
@@ -313,7 +328,7 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
                 mToken = json.getString("token");
 
                 new Handler(Looper.getMainLooper()).post(() -> {
-                    launchComposite(displayName, meetingInput, localAvatarImageResource, title, subtitle, selectedLanguage, isRightToLeft, remoteAvatarImageResource, orientationOptions, promise);
+                    launchComposite(displayName, meetingInput, localAvatarImageResource, title, subtitle, selectedLanguage, isRightToLeft, disableLeaveCallConfirmation, remoteAvatarImageResource, orientationOptions, promise);
                 });
 
             } catch (Exception e) {

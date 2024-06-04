@@ -72,12 +72,14 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
                                     remoteOptions: NSDictionary,
                                     remoteAvatar: AnyObject?,
                                     localizationOptions: NSDictionary,
+                                    orientationOptions: NSDictionary?,
                                     resolver resolve: @escaping RCTPromiseResolveBlock,
                                     rejecter reject: @escaping RCTPromiseRejectBlock) {
 
         guard let localOptionsDict = localOptions as? [String: Any],
               let remoteOptionsDict = remoteOptions as? [String: Any],
-              let localizationOptionsDict = localizationOptions as? [String: Any] else {
+              let localizationOptionsDict = localizationOptions as? [String: Any],
+              let orientationOptionDict = orientationOptions as? [String: Any] else {
             return
         }
 
@@ -99,7 +101,10 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
                                      subtitle: localOptionsDict["subtitle"] as? String,
                                      languageCode: localizationOptionsDict["locale"] as? String ?? "en",
                                      isRightToLeft: localizationOptionsDict["locale"] as? Bool ?? false,
+                                     disableLeaveCallConfirmation: localOptionsDict["disableLeaveCallConfirmation"] as? Bool ?? false,
                                      remoteAvatar: remoteAvatar,
+                                     setupOrientation: orientationOptionDict["setupOrientation"] as? String,
+                                     callOrientation: orientationOptionDict["callOrientation"] as? String,
                                      resolver: resolve,
                                      rejecter: reject)
         }
@@ -113,7 +118,10 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
                                      subtitle: String?,
                                      languageCode: String,
                                      isRightToLeft: Bool,
+                                     disableLeaveCallConfirmation: Bool,
                                      remoteAvatar: AnyObject?,
+                                     setupOrientation: String?,
+                                     callOrientation: String?,
                                      resolver resolve: @escaping RCTPromiseResolveBlock,
                                      rejecter reject: @escaping RCTPromiseRejectBlock) {
         
@@ -123,10 +131,17 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
         localizationConfig = LocalizationOptions(locale: locale,
                                                  layoutDirection: layoutDirection)
         
-        let callCompositeOptions: CallCompositeOptions
-        callCompositeOptions = CallCompositeOptions(localization: localizationConfig)
+        var callScreenControlBarOptions: CallScreenControlBarOptions?
+        var callScreenOptions: CallScreenOptions?
+        var mode: LeaveCallConfirmationMode = disableLeaveCallConfirmation ? LeaveCallConfirmationMode.alwaysDisabled : LeaveCallConfirmationMode.alwaysEnabled
 
-        callComposite = CallComposite(withOptions: callCompositeOptions)
+        callScreenControlBarOptions = CallScreenControlBarOptions(leaveCallConfirmationMode: mode)
+        callScreenOptions = CallScreenOptions(controlBarOptions: callScreenControlBarOptions)
+        
+        let callCompositeOptions: CallCompositeOptions
+      callCompositeOptions = CallCompositeOptions(localization: localizationConfig, setupScreenOrientation: OrientationOptions.portrait, callingScreenOrientation: OrientationOptions.allButUpsideDown, callScreenOptions: callScreenOptions)
+        
+      callComposite = CallComposite(withOptions: callCompositeOptions)
         guard let callComposite = callComposite else {
                 return
             }

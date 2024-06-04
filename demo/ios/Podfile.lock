@@ -1,9 +1,9 @@
 PODS:
-  - AzureCommunicationCalling (2.8.0):
+  - AzureCommunicationCalling (2.10.1):
     - AzureCommunicationCommon (~> 1.0)
   - AzureCommunicationCommon (1.2.0)
-  - AzureCommunicationUICalling (1.6.0):
-    - AzureCommunicationCalling (= 2.8.0)
+  - AzureCommunicationUICalling (1.7.0):
+    - AzureCommunicationCalling (= 2.10.1)
     - AzureCore (= 1.0.0-beta.15)
     - MicrosoftFluentUI/ActivityIndicator_ios (= 0.10.0)
     - MicrosoftFluentUI/Avatar_ios (= 0.10.0)
@@ -475,7 +475,7 @@ PODS:
     - React-jsi (= 0.72.14)
     - React-logger (= 0.72.14)
     - React-perflogger (= 0.72.14)
-  - RNCPicker (2.7.5):
+  - RNCPicker (2.7.6):
     - React-Core
   - RNScreens (3.31.1):
     - RCT-Folly (= 2021.07.22.00)
@@ -485,7 +485,7 @@ PODS:
   - Yoga (1.14.0)
 
 DEPENDENCIES:
-  - AzureCommunicationUICalling (= 1.6.0)
+  - AzureCommunicationUICalling (= 1.7.0)
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
@@ -629,9 +629,9 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  AzureCommunicationCalling: 4c15cc33497ad858aee28561fdd4937cef3049f6
+  AzureCommunicationCalling: 708e0c83cb82b90b42d1e66f8f3ddfc84b7fadc6
   AzureCommunicationCommon: 130a21be2be889f83dc4adbf994af6285f962de8
-  AzureCommunicationUICalling: f808168cf3e642a59977b2a5dd085597f52c7e98
+  AzureCommunicationUICalling: 3796244f7ecf4b8fa992095d6a85a4f6d8e85235
   AzureCore: ebbf7cf4dfe72afc7584088c38d1c99f5a35d647
   boost: 7dcd2de282d72e344012f7d6564d024930a6a440
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
@@ -675,11 +675,11 @@ SPEC CHECKSUMS:
   React-runtimescheduler: c51708a0382a697a96b61a84fb1732a43edf4a13
   React-utils: e724eca54907846d399d0f599b0c120f9c58f5d5
   ReactCommon: d47b68b0b0666b90844632916c043d1a5c44f217
-  RNCPicker: 3e2c37a8328f368ce14da050cdc8231deb5fc9f9
+  RNCPicker: f58e790450cb0a74c09dd1c677bd1de41a5741b9
   RNScreens: dc2dd6ebc31978d9346df2159962550e5316b71a
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   Yoga: c32e0be1a17f8f1f0e633a3122f7666441f52c82
 
-PODFILE CHECKSUM: d98d13fce06433826585501debc5e18b2a7f5e1b
+PODFILE CHECKSUM: 4946594670a680345c86dfe67135c3bce62d649a
 
 COCOAPODS: 1.15.2

@@ -38,6 +38,7 @@ const App = () => {
     const [subtitle, onChangeSubtitle] = useState('');
     const [meetingInput, onChangeMeetingInput] = useState('');
     const [isRightToLeft, onChangeIsRightToLeft] = useState(false);
+    const [disableLeaveCallConfirmation, onChangeDisableLeaveCallConfirmation] = useState(false);
     const [localAvatar, onLocalAvatarSet] = useState('');
     const [remoteAvatar, onRemoteAvatarSet] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
@@ -45,6 +46,7 @@ const App = () => {
     const [isGroupCall, setIsGroupCall] = useState(true);
     const [localesArray, setLocalesArray] = useState([]);
     const toggleIsRightToLeftSwitch = () => onChangeIsRightToLeft(!isRightToLeft);
+    const disableLeaveCallConfirmationSwitch = () => onChangeDisableLeaveCallConfirmation(!disableLeaveCallConfirmation);
 
     React.useLayoutEffect(() => {
       navigation.setOptions({
@@ -112,14 +114,14 @@ const App = () => {
         const remoteAvatarImageResource = resolveAvatarSource(remoteAvatar);
         await RNAzureCommunicationUICalling.startCallComposite(
           // local options
-          {"displayName": displayName, "title": title, "subtitle": subtitle},
+          {"displayName": displayName, "title": title, "subtitle": subtitle, "disableLeaveCallConfirmation": disableLeaveCallConfirmation},
           localAvatarImageResource,
           // remote options
           {"token": tokenInput, "meeting": meetingInput},
           remoteAvatarImageResource,
           // localization options
-          {"locale": selectedLanguage, "layout": isRightToLeft}
-          // {"setupOrientation": "PORTRAIT", "callOrientation": "PORTRAIT"} 
+          {"locale": selectedLanguage, "layout": isRightToLeft},
+          {"setupOrientation": "PORTRAIT", "callOrientation": "PORTRAIT"} 
         );
       } catch (e) {
         Alert.alert('Error', e.message, [{ text: 'Dismiss' }]);
@@ -298,6 +300,14 @@ const App = () => {
                 <Text style={styles.settingsHeaderText}>Remote Participant View Data</Text>
                 <AvatarsView setAvatar={remoteAvatar} onAvatarSet={setRemoteAvatar} />
               </View>
+
+              <View style={styles.settingsSwitchToggleContainer}>
+                  <Text>Disable leave call confirmation</Text>
+                  <Switch
+                    onValueChange={disableLeaveCallConfirmationSwitch.bind(this)}
+                    value={isRightToLeft}
+                  />
+                </View>
             </View>
           </ScrollView>
         </Modal>

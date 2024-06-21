@@ -176,17 +176,6 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
         
         CallCompositeCallScreenOptions callScreenOptions = new CallCompositeCallScreenOptions();
         callScreenOptions.setControlBarOptions(callScreenControlBarOptions);
-
-        CallComposite callComposite = new CallCompositeBuilder()
-                .localization(new CallCompositeLocalizationOptions(Locale.forLanguageTag(selectedLanguage), layoutDirection))
-                .setupScreenOrientation(getCompositeDefinedOrientation(setupOrientation))
-                .callScreenOrientation(getCompositeDefinedOrientation(callOrientation))
-                .multitasking(new CallCompositeMultitaskingOptions(true))
-                .callScreenOptions(callScreenOptions)
-                .applicationContext(context.getApplicationContext())
-                .credential(communicationTokenCredential)
-                .displayName(displayName)
-                .build();
                         
         try {
             CommunicationTokenRefreshOptions communicationTokenRefreshOptions =
@@ -194,6 +183,16 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
 
             CommunicationTokenCredential communicationTokenCredential = new CommunicationTokenCredential(communicationTokenRefreshOptions);
 
+            CallComposite callComposite = new CallCompositeBuilder()
+                    .localization(new CallCompositeLocalizationOptions(Locale.forLanguageTag(selectedLanguage), layoutDirection))
+                    .setupScreenOrientation(getCompositeDefinedOrientation(setupOrientation))
+                    .callScreenOrientation(getCompositeDefinedOrientation(callOrientation))
+                    .multitasking(new CallCompositeMultitaskingOptions(true))
+                    .callScreenOptions(callScreenOptions)
+                    .applicationContext(context.getApplicationContext())
+                    .credential(communicationTokenCredential)
+                    .displayName(displayName)
+                    .build();
             callComposite.addOnErrorEventHandler(eventHandler -> {
                 Log.d(TAG, "================= application is logging exception =================");
                 Log.d(TAG, eventHandler.getCause().toString());

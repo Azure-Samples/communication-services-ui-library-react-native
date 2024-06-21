@@ -17,7 +17,6 @@ import com.azure.android.communication.ui.calling.CallCompositeBuilder;
 import com.azure.android.communication.ui.calling.models.CallCompositeAudioVideoMode;
 import com.azure.android.communication.ui.calling.models.CallCompositeCallHistoryRecord;
 import com.azure.android.communication.ui.calling.models.CallCompositeDebugInfo;
-import com.azure.android.communication.ui.calling.models.CallCompositeDismissedEvent;
 import com.azure.android.communication.ui.calling.models.CallCompositeGroupCallLocator;
 import com.azure.android.communication.ui.calling.models.CallCompositeJoinLocator;
 import com.azure.android.communication.ui.calling.models.CallCompositeLocalOptions;
@@ -25,7 +24,6 @@ import com.azure.android.communication.ui.calling.models.CallCompositeLocalizati
 import com.azure.android.communication.ui.calling.models.CallCompositeMultitaskingOptions;
 import com.azure.android.communication.ui.calling.models.CallCompositeParticipantViewData;
 import com.azure.android.communication.ui.calling.models.CallCompositeSetupScreenViewData;
-import com.azure.android.communication.ui.calling.models.CallCompositeRemoteOptions;
 import com.azure.android.communication.ui.calling.models.CallCompositeCallScreenControlBarOptions;
 import com.azure.android.communication.ui.calling.models.CallCompositeCallScreenOptions;
 import com.azure.android.communication.ui.calling.models.CallCompositeSupportedLocale;
@@ -49,7 +47,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 import java.util.UUID;
 
 import okhttp3.OkHttpClient;
@@ -177,21 +174,23 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
         
         CallCompositeCallScreenOptions callScreenOptions = new CallCompositeCallScreenOptions();
         callScreenOptions.setControlBarOptions(callScreenControlBarOptions);
-
-        CallComposite callComposite = new CallCompositeBuilder()
-                .localization(new CallCompositeLocalizationOptions(Locale.forLanguageTag(selectedLanguage), layoutDirection))
-                .setupScreenOrientation(getCompositeDefinedOrientation(setupOrientation))
-                .callScreenOrientation(getCompositeDefinedOrientation(callOrientation))
-                .multitasking(new CallCompositeMultitaskingOptions(true))
-                .callScreenOptions(callScreenOptions)
-                .build();
-
+                        
         try {
             CommunicationTokenRefreshOptions communicationTokenRefreshOptions =
                     new CommunicationTokenRefreshOptions(this::fetchToken, true);
 
             CommunicationTokenCredential communicationTokenCredential = new CommunicationTokenCredential(communicationTokenRefreshOptions);
 
+            CallComposite callComposite = new CallCompositeBuilder()
+                    .localization(new CallCompositeLocalizationOptions(Locale.forLanguageTag(selectedLanguage), layoutDirection))
+                    .setupScreenOrientation(getCompositeDefinedOrientation(setupOrientation))
+                    .callScreenOrientation(getCompositeDefinedOrientation(callOrientation))
+                    .multitasking(new CallCompositeMultitaskingOptions(true))
+                    .callScreenOptions(callScreenOptions)
+                    .applicationContext(context.getApplicationContext())
+                    .credential(communicationTokenCredential)
+                    .displayName(displayName)
+                    .build();
             callComposite.addOnErrorEventHandler(eventHandler -> {
                 Log.d(TAG, "================= application is logging exception =================");
                 Log.d(TAG, eventHandler.getCause().toString());
@@ -237,16 +236,11 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
 
             callComposite.addOnDismissedEventHandler((dismissedEvent) -> {
                 Log.d(TAG, "================= application is logging call composite dismissed =================");
+                callComposite.dismiss();
             });   
 
             if (URLUtil.isValidUrl(meetingInput.trim())) {
                 CallCompositeJoinLocator locator = new CallCompositeTeamsMeetingLinkLocator(meetingInput);
-
-                CallCompositeRemoteOptions remoteOptions = new CallCompositeRemoteOptions(
-                        locator,
-                        communicationTokenCredential,
-                        displayName);
-
 
                 CallCompositeLocalOptions localOptions = new CallCompositeLocalOptions();
 
@@ -268,15 +262,17 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
                 }
                 localOptions.setAudioVideoMode(CallCompositeAudioVideoMode.AUDIO_ONLY);
                 
-                callComposite.launch(context, remoteOptions, localOptions);
+                callComposite.launch(context, locator, localOptions);
 
             } else {
-                CallCompositeJoinLocator locator = new CallCompositeGroupCallLocator(UUID.fromString(meetingInput));
+                boolean isUUID = false;
 
-                CallCompositeRemoteOptions remoteOptions = new CallCompositeRemoteOptions(
-                        locator,
-                        communicationTokenCredential,
-                        displayName);
+                try {
+                    UUID uuid = UUID.fromString(meetingInput);
+                    isUUID = true;
+                } catch(Exception ignored) {
+                }
+
                 CallCompositeLocalOptions localOptions = new CallCompositeLocalOptions();
 
                 if (localAvatarImageResource != null) {
@@ -290,15 +286,26 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
                     localOptions.setParticipantViewData(participantViewData);
 
                 }
-                
                 if (title != null) {
                     CallCompositeSetupScreenViewData setupViewData = new CallCompositeSetupScreenViewData()
-                        .setTitle(title)
-                        .setSubtitle(subtitle);
+                            .setTitle(title)
+                            .setSubtitle(subtitle);
                     localOptions.setSetupScreenViewData(setupViewData);
                 }
-                                
-                callComposite.launch(context, remoteOptions, localOptions);
+                if (isUUID) {
+                    CallCompositeJoinLocator locator = new CallCompositeGroupCallLocator(UUID.fromString(meetingInput));
+                    callComposite.launch(context, locator, localOptions);
+                } else {
+                    List<CommunicationIdentifier> identifiers = new ArrayList<>();
+                    String[] rawIdArray = meetingInput.split(",");
+                    for (String rawId : rawIdArray) {
+                        rawId = rawId.trim();
+                        if (!rawId.isEmpty()) {
+                            identifiers.add(CommunicationIdentifier.fromRawId(rawId));
+                        }
+                    }
+                    callComposite.launch(context, identifiers, localOptions);
+                }
             }
 
             promise.resolve(null);

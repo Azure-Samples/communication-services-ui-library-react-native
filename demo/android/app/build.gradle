@@ -119,7 +119,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.azure.android:azure-communication-ui-calling:1.7.0'
+    implementation 'com.azure.android:azure-communication-ui-calling:1.8.0'
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
 

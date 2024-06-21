@@ -25,7 +25,6 @@ import com.azure.android.communication.ui.calling.models.CallCompositeLocalizati
 import com.azure.android.communication.ui.calling.models.CallCompositeMultitaskingOptions;
 import com.azure.android.communication.ui.calling.models.CallCompositeParticipantViewData;
 import com.azure.android.communication.ui.calling.models.CallCompositeSetupScreenViewData;
-import com.azure.android.communication.ui.calling.models.CallCompositeRemoteOptions;
 import com.azure.android.communication.ui.calling.models.CallCompositeCallScreenControlBarOptions;
 import com.azure.android.communication.ui.calling.models.CallCompositeCallScreenOptions;
 import com.azure.android.communication.ui.calling.models.CallCompositeSupportedLocale;
@@ -184,8 +183,11 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
                 .callScreenOrientation(getCompositeDefinedOrientation(callOrientation))
                 .multitasking(new CallCompositeMultitaskingOptions(true))
                 .callScreenOptions(callScreenOptions)
+                .applicationContext(context.getApplicationContext())
+                .credential(communicationTokenCredential)
+                .displayName(displayName)
                 .build();
-
+                        
         try {
             CommunicationTokenRefreshOptions communicationTokenRefreshOptions =
                     new CommunicationTokenRefreshOptions(this::fetchToken, true);
@@ -242,12 +244,6 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
             if (URLUtil.isValidUrl(meetingInput.trim())) {
                 CallCompositeJoinLocator locator = new CallCompositeTeamsMeetingLinkLocator(meetingInput);
 
-                CallCompositeRemoteOptions remoteOptions = new CallCompositeRemoteOptions(
-                        locator,
-                        communicationTokenCredential,
-                        displayName);
-
-
                 CallCompositeLocalOptions localOptions = new CallCompositeLocalOptions();
 
                 if (localAvatarImageResource != null) {
@@ -268,15 +264,11 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
                 }
                 localOptions.setAudioVideoMode(CallCompositeAudioVideoMode.AUDIO_ONLY);
                 
-                callComposite.launch(context, remoteOptions, localOptions);
+                callComposite.launch(context, locator, localOptions);
 
             } else {
                 CallCompositeJoinLocator locator = new CallCompositeGroupCallLocator(UUID.fromString(meetingInput));
 
-                CallCompositeRemoteOptions remoteOptions = new CallCompositeRemoteOptions(
-                        locator,
-                        communicationTokenCredential,
-                        displayName);
                 CallCompositeLocalOptions localOptions = new CallCompositeLocalOptions();
 
                 if (localAvatarImageResource != null) {
@@ -298,7 +290,7 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
                     localOptions.setSetupScreenViewData(setupViewData);
                 }
                                 
-                callComposite.launch(context, remoteOptions, localOptions);
+                callComposite.launch(context, locator, localOptions);
             }
 
             promise.resolve(null);

@@ -139,9 +139,20 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
         callScreenOptions = CallScreenOptions(controlBarOptions: callScreenControlBarOptions)
         
         let callCompositeOptions: CallCompositeOptions
-      callCompositeOptions = CallCompositeOptions(localization: localizationConfig, setupScreenOrientation: OrientationOptions.portrait, callingScreenOrientation: OrientationOptions.allButUpsideDown, callScreenOptions: callScreenOptions)
+        callCompositeOptions = CallCompositeOptions(localization: localizationConfig, 
+        setupScreenOrientation: OrientationOptions.portrait, 
+        callingScreenOrientation: OrientationOptions.allButUpsideDown, 
+        callScreenOptions: callScreenOptions,
+        displayName: displayName)
         
-      callComposite = CallComposite(withOptions: callCompositeOptions)
+        if let communicationTokenCredential = try? getTokenCredential(tokenInput: tokenInput) {
+            callComposite = CallComposite(credential: communicationTokenCredential, withOptions: callCompositeOptions)
+        } else {
+            reject(RNCallCompositeConnectionError.invalidToken.getErrorCode(),
+                   "Token is invalid",
+                   RNCallCompositeConnectionError.invalidToken)
+        }
+
         guard let callComposite = callComposite else {
                 return
             }
@@ -180,25 +191,13 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
 
         localOptions = LocalOptions(participantViewData: participantViewData, setupScreenViewData: setupViewData)
 
-        if let communicationTokenCredential = try? getTokenCredential(tokenInput: tokenInput) {
-            if let url = URL(string: meetingInput),
-               UIApplication.shared.canOpenURL(url as URL) {
-                let remoteOptions = RemoteOptions(for: .teamsMeeting(teamsLink: meetingInput),
-                                                  credential: communicationTokenCredential,
-                                                  displayName: displayName)
-                callComposite.launch(remoteOptions: remoteOptions, localOptions: localOptions)
-            } else {
-                let remoteOptions = RemoteOptions(for: .groupCall(groupId: UUID(uuidString: meetingInput) ?? UUID()),
-                                                  credential: communicationTokenCredential,
-                                                  displayName: displayName)
-                callComposite.launch(remoteOptions: remoteOptions, localOptions: localOptions)
-            }
-            resolve(nil)
+        if let url = URL(string: meetingInput),
+            UIApplication.shared.canOpenURL(url as URL) {
+            callComposite.launch(locator: .teamsMeeting(teamsLink: meetingInput), localOptions: localOptions)
         } else {
-            reject(RNCallCompositeConnectionError.invalidToken.getErrorCode(),
-                   "Token is invalid",
-                   RNCallCompositeConnectionError.invalidToken)
+            callComposite.launch(locator: .groupCall(groupId: UUID(uuidString: meetingInput) ?? UUID()), localOptions: localOptions)
         }
+        resolve(nil)
     }
 
     private func getTokenCredential(tokenInput: String) throws -> CommunicationTokenCredential {

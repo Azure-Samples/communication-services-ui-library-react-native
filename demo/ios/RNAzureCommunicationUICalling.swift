@@ -167,6 +167,7 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
         callComposite.events.onRemoteParticipantJoined = onRemoteParticipantJoinedHandler
         callComposite.events.onDismissed = { dismissedEvent in
             print("ReactNativeDemoView::getEventsHandler::onDismissed \(dismissedEvent)")
+          callComposite.dismiss()
         }
         callComposite.events.onCallStateChanged = { [weak callComposite] callState in
             print("ReactNativeDemoView::getEventsHandler::onCallStateChanged \(callState)")
@@ -194,8 +195,16 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
         if let url = URL(string: meetingInput),
             UIApplication.shared.canOpenURL(url as URL) {
             callComposite.launch(locator: .teamsMeeting(teamsLink: meetingInput), localOptions: localOptions)
+        } else if let uuid = UUID(uuidString: meetingInput) {
+            // If the input is a valid UUID
+            callComposite.launch(locator: .groupCall(groupId: uuid), localOptions: localOptions)
         } else {
-            callComposite.launch(locator: .groupCall(groupId: UUID(uuidString: meetingInput) ?? UUID()), localOptions: localOptions)
+          let ids: [String] = meetingInput.split(separator: ",").map {
+                          String($0).trimmingCharacters(in: .whitespacesAndNewlines)
+              }
+          let communicationIdentifiers: [CommunicationIdentifier] =
+                      ids.map { createCommunicationIdentifier(fromRawId: $0) }
+          callComposite.launch(participants: communicationIdentifiers, localOptions: localOptions)
         }
         resolve(nil)
     }

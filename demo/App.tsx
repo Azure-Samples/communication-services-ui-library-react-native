@@ -44,6 +44,8 @@ const App = () => {
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedLanguage, setSelectedLanguage] = useState('en');
     const [isGroupCall, setIsGroupCall] = useState(true);
+    const [isTeamsCall, setIsTeamsCall] = useState(false);
+    const [isOneToNCall, setIsOneToNCall] = useState(false);
     const [localesArray, setLocalesArray] = useState([]);
     const toggleIsRightToLeftSwitch = () => onChangeIsRightToLeft(!isRightToLeft);
     const disableLeaveCallConfirmationSwitch = () => onChangeDisableLeaveCallConfirmation(!disableLeaveCallConfirmation);
@@ -130,7 +132,23 @@ const App = () => {
 
     const changeCallMeetingOption = () => {
       onChangeMeetingInput('')
-      setIsGroupCall(!isGroupCall)
+      setIsGroupCall(true)
+      setIsTeamsCall(false)
+      setIsOneToNCall(false)
+    };
+
+    const changeCallTeamsMeetingOption = () => {
+      onChangeMeetingInput('')
+      setIsGroupCall(false)
+      setIsTeamsCall(true)
+      setIsOneToNCall(false)
+    };
+
+    const changeCallOneToNMeetingOption = () => {
+      onChangeMeetingInput('')
+      setIsGroupCall(false)
+      setIsTeamsCall(false)
+      setIsOneToNCall(true)
     };
 
     return (
@@ -145,45 +163,72 @@ const App = () => {
               <Text style={!isGroupCall ? styles.textCloseStyle : styles.textStyle}>Group Call</Text>
             </Pressable>
             <Pressable
-              style={[styles.tabButton, !isGroupCall ? styles.buttonOpen : styles.buttonDisabled]}
-              disabled={!isGroupCall}
-              onPress={changeCallMeetingOption}
+              style={[styles.tabButton, isTeamsCall ? styles.buttonOpen : styles.buttonDisabled]}
+              disabled={isTeamsCall}
+              onPress={changeCallTeamsMeetingOption}
             >
-              <Text style={isGroupCall ? styles.textCloseStyle : styles.textStyle}>Teams Meeting</Text>
+              <Text style={!isTeamsCall ? styles.textCloseStyle : styles.textStyle}>Teams Meeting</Text>
+            </Pressable>
+            <Pressable
+              style={[styles.tabButton, isOneToNCall ? styles.buttonOpen : styles.buttonDisabled]}
+              disabled={isOneToNCall}
+              onPress={changeCallOneToNMeetingOption}
+            >
+              <Text style={!isOneToNCall ? styles.textCloseStyle : styles.textStyle}>One To N Call</Text>
             </Pressable>
           </View>
 
-          {isGroupCall ? <View>
-            <Text style={styles.inputTitle}>
-              Group call ID
-            </Text>
-            <TextInput
-              style={styles.textInput}
-              onChangeText={onChangeMeetingInput}
-              value={meetingInput}
-              placeholderTextColor={"#6E6E6E"}
-              placeholder="Enter call ID"
-            />
-
-            <Text style={styles.inputDescription}>
-              Start a call to get a call ID.
-            </Text>
-          </View> : <View>
-            <Text style={styles.inputTitle}>
-              Teams meeting
-            </Text>
-            <TextInput
-              style={styles.textInput}
-              onChangeText={onChangeMeetingInput}
-              value={meetingInput}
-              placeholderTextColor={"#6E6E6E"}
-              placeholder="Enter invite link"
-            />
-
-            <Text style={styles.inputDescription}>
-              Get link from the meeting invite or anyone in the call.
-            </Text>
-          </View>}
+          {isGroupCall && (
+            <View>
+              <Text style={styles.inputTitle}>
+                Group call ID
+              </Text>
+              <TextInput
+                style={styles.textInput}
+                onChangeText={onChangeMeetingInput}
+                value={meetingInput}
+                placeholderTextColor={"#6E6E6E"}
+                placeholder="Enter call ID"
+              />
+              <Text style={styles.inputDescription}>
+                Start a call to get a call ID.
+              </Text>
+            </View>
+          )}
+          {isTeamsCall && (
+            <View>
+              <Text style={styles.inputTitle}>
+                Teams meeting
+              </Text>
+              <TextInput
+                style={styles.textInput}
+                onChangeText={onChangeMeetingInput}
+                value={meetingInput}
+                placeholderTextColor={"#6E6E6E"}
+                placeholder="Enter invite link"
+              />
+              <Text style={styles.inputDescription}>
+                Get link from the meeting invite or anyone in the call.
+              </Text>
+            </View>
+          )}
+          {isOneToNCall && (
+            <View>
+              <Text style={styles.inputTitle}>
+                One-to-N call
+              </Text>
+              <TextInput
+                style={styles.textInput}
+                onChangeText={onChangeMeetingInput}
+                value={meetingInput}
+                placeholderTextColor={"#6E6E6E"}
+                placeholder="Enter participants MRIs separated by comma"
+              />
+              <Text style={styles.inputDescription}>
+                Outgoing Call.
+              </Text>
+            </View>
+          )}
 
           <Text style={styles.inputTitle}>
             ACS Token

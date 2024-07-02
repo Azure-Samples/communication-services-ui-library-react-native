@@ -23,6 +23,7 @@ import com.azure.android.communication.ui.calling.models.CallCompositeLocalOptio
 import com.azure.android.communication.ui.calling.models.CallCompositeLocalizationOptions;
 import com.azure.android.communication.ui.calling.models.CallCompositeMultitaskingOptions;
 import com.azure.android.communication.ui.calling.models.CallCompositeParticipantViewData;
+import com.azure.android.communication.ui.calling.models.CallCompositeRoomLocator;
 import com.azure.android.communication.ui.calling.models.CallCompositeSetupScreenViewData;
 import com.azure.android.communication.ui.calling.models.CallCompositeCallScreenControlBarOptions;
 import com.azure.android.communication.ui.calling.models.CallCompositeCallScreenOptions;
@@ -295,6 +296,9 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
                 if (isUUID) {
                     CallCompositeJoinLocator locator = new CallCompositeGroupCallLocator(UUID.fromString(meetingInput));
                     callComposite.launch(context, locator, localOptions);
+                } else if(isRoomsID(meetingInput)) {
+                    CallCompositeJoinLocator locator = new CallCompositeRoomLocator(meetingInput);
+                    callComposite.launch(context, locator, localOptions);
                 } else {
                     List<CommunicationIdentifier> identifiers = new ArrayList<>();
                     String[] rawIdArray = meetingInput.split(",");
@@ -312,6 +316,16 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
         } catch (Exception e) {
             promise.reject("Token is invalid", e);
         }
+    }
+
+    private boolean isRoomsID(String meetingInput) {
+        for(int i=0;i<meetingInput.length();i++) {
+            char ch = meetingInput.charAt(i);
+            if(!(ch >= '0' && ch <= '9')) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private String fetchToken() {

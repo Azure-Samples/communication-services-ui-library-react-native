@@ -46,6 +46,7 @@ const App = () => {
     const [isGroupCall, setIsGroupCall] = useState(true);
     const [isTeamsCall, setIsTeamsCall] = useState(false);
     const [isOneToNCall, setIsOneToNCall] = useState(false);
+    const [isRoomsCall, setIsRoomsCall] = useState(false);
     const [localesArray, setLocalesArray] = useState([]);
     const toggleIsRightToLeftSwitch = () => onChangeIsRightToLeft(!isRightToLeft);
     const disableLeaveCallConfirmationSwitch = () => onChangeDisableLeaveCallConfirmation(!disableLeaveCallConfirmation);
@@ -135,6 +136,7 @@ const App = () => {
       setIsGroupCall(true)
       setIsTeamsCall(false)
       setIsOneToNCall(false)
+      setIsRoomsCall(false)
     };
 
     const changeCallTeamsMeetingOption = () => {
@@ -142,6 +144,7 @@ const App = () => {
       setIsGroupCall(false)
       setIsTeamsCall(true)
       setIsOneToNCall(false)
+      setIsRoomsCall(false)
     };
 
     const changeCallOneToNMeetingOption = () => {
@@ -149,7 +152,16 @@ const App = () => {
       setIsGroupCall(false)
       setIsTeamsCall(false)
       setIsOneToNCall(true)
+      setIsRoomsCall(false)
     };
+
+    const changeCallRoomsCallOption = () => {
+      onChangeMeetingInput('')
+      setIsGroupCall(false)
+      setIsTeamsCall(false)
+      setIsOneToNCall(false)
+      setIsRoomsCall(true)
+    }
 
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: '#F8F8F8' }}>
@@ -175,6 +187,13 @@ const App = () => {
               onPress={changeCallOneToNMeetingOption}
             >
               <Text style={!isOneToNCall ? styles.textCloseStyle : styles.textStyle}>One To N Call</Text>
+            </Pressable>
+            <Pressable
+              style={[styles.tabButton, isRoomsCall ? styles.buttonOpen : styles.buttonDisabled]}
+              disabled={isRoomsCall}
+              onPress={changeCallRoomsCallOption}
+            >
+              <Text style={!isRoomsCall ? styles.textCloseStyle : styles.textStyle}>Rooms Call</Text>
             </Pressable>
           </View>
 
@@ -229,6 +248,25 @@ const App = () => {
               </Text>
             </View>
           )}
+          {
+            isRoomsCall && (
+              <View>
+                <Text style={styles.inputTitle}>
+                  Rooms Call
+                </Text>
+                <TextInput
+                  style={styles.textInput}
+                  onChangeText={onChangeMeetingInput}
+                  value={meetingInput}
+                  placeholderTextColor={"#6E6E6E"}
+                  placeholder="Enter Rooms ID"
+                />
+                <Text style={styles.inputDescription}>
+                  Get Room ID created by admin to join rooms call.
+                </Text>
+              </View>
+            )
+          }
 
           <Text style={styles.inputTitle}>
             ACS Token

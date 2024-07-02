@@ -208,6 +208,8 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
         }
         resolve(nil)
     }
+  
+
 
     private func getTokenCredential(tokenInput: String) throws -> CommunicationTokenCredential {
         if let url = URL(string: tokenInput),
@@ -227,6 +229,15 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
                 throw RNCallCompositeConnectionError.invalidToken
             }
         }
+    }
+
+    private func isRoomsCall(meetingInput: String) -> Bool {
+      for ch in meetingInput {
+          if !(ch >= "0" && ch <= "9") {
+              return false
+          }
+      }
+      return true
     }
 
     private func getCommunicationToken(tokenUrl: URL) -> TokenRefresher {

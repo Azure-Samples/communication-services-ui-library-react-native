@@ -1,9 +1,9 @@
 PODS:
-  - AzureCommunicationCalling (2.11.0):
+  - AzureCommunicationCalling (2.12.0):
     - AzureCommunicationCommon (~> 1.0)
   - AzureCommunicationCommon (1.2.0)
-  - AzureCommunicationUICalling (1.9.0):
-    - AzureCommunicationCalling (= 2.11.0)
+  - AzureCommunicationUICalling (1.10.0):
+    - AzureCommunicationCalling (= 2.12.0)
     - AzureCore (= 1.0.0-beta.15)
     - MicrosoftFluentUI/ActivityIndicator_ios (= 0.10.0)
     - MicrosoftFluentUI/Avatar_ios (= 0.10.0)
@@ -485,7 +485,7 @@ PODS:
   - Yoga (1.14.0)
 
 DEPENDENCIES:
-  - AzureCommunicationUICalling (= 1.9.0)
+  - AzureCommunicationUICalling (= 1.10.0)
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
@@ -629,9 +629,9 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  AzureCommunicationCalling: 35bebb366c5d423bacdd43550df35c9d89d25235
+  AzureCommunicationCalling: bdb5740e5120b4285db5d8dbd3c0d0350a01d9bd
   AzureCommunicationCommon: 130a21be2be889f83dc4adbf994af6285f962de8
-  AzureCommunicationUICalling: d573f8ceb6f7c53cc3a437d9e67f3f93eaaabc78
+  AzureCommunicationUICalling: 9d7fc72867fb256b49048e1b6af06cd81eff5780
   AzureCore: ebbf7cf4dfe72afc7584088c38d1c99f5a35d647
   boost: 7dcd2de282d72e344012f7d6564d024930a6a440
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
@@ -680,6 +680,6 @@ SPEC CHECKSUMS:
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   Yoga: c32e0be1a17f8f1f0e633a3122f7666441f52c82
 
-PODFILE CHECKSUM: 2898fca038640016314fa7636bbf89c933b38e48
+PODFILE CHECKSUM: 56857ed7be64cb32e21c1d5a7019db469221c130
 
 COCOAPODS: 1.15.2

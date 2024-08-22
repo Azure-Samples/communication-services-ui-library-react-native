@@ -192,7 +192,9 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
 
         localOptions = LocalOptions(participantViewData: participantViewData, setupScreenViewData: setupViewData)
 
-        if let url = URL(string: meetingInput),
+        if isRoomsCall(meetingInput: meetingInput) {
+            callComposite.launch(locator: .roomCall(roomId: meetingInput), localOptions: localOptions)
+        } else if let url = URL(string: meetingInput),
             UIApplication.shared.canOpenURL(url as URL) {
             callComposite.launch(locator: .teamsMeeting(teamsLink: meetingInput), localOptions: localOptions)
         } else if let uuid = UUID(uuidString: meetingInput) {

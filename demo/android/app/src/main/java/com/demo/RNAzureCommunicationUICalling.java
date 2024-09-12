@@ -16,6 +16,7 @@ import com.azure.android.communication.ui.calling.CallComposite;
 import com.azure.android.communication.ui.calling.CallCompositeBuilder;
 import com.azure.android.communication.ui.calling.models.CallCompositeAudioVideoMode;
 import com.azure.android.communication.ui.calling.models.CallCompositeCallHistoryRecord;
+import com.azure.android.communication.ui.calling.models.CallCompositeCallScreenHeaderViewData;
 import com.azure.android.communication.ui.calling.models.CallCompositeDebugInfo;
 import com.azure.android.communication.ui.calling.models.CallCompositeGroupCallLocator;
 import com.azure.android.communication.ui.calling.models.CallCompositeJoinLocator;
@@ -175,7 +176,11 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
         
         CallCompositeCallScreenOptions callScreenOptions = new CallCompositeCallScreenOptions();
         callScreenOptions.setControlBarOptions(callScreenControlBarOptions);
-                        
+        CallCompositeCallScreenHeaderViewData headerViewData = new CallCompositeCallScreenHeaderViewData();
+        headerViewData.setTitle("Custom title");
+        headerViewData.setSubtitle("Custom subtitle");
+        callScreenOptions.setHeaderViewData(headerViewData);
+
         try {
             CommunicationTokenRefreshOptions communicationTokenRefreshOptions =
                     new CommunicationTokenRefreshOptions(this::fetchToken, true);
@@ -229,6 +234,24 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
                 });
             }
 
+            callComposite.addOnRemoteParticipantJoinedEventHandler((event) -> {
+                Log.d(TAG, "================= application is logging remote participant joined event =================");
+                if (event.getIdentifiers().size() >= 1) {
+                    headerViewData.setTitle("Custom title changed:: Participant count " + event.getIdentifiers().size());
+                    headerViewData.setSubtitle("Custom subtitle changed:: Participant count " + event.getIdentifiers().size());
+                }
+            });
+
+            callComposite.addOnRemoteParticipantLeftEventHandler((event) -> {
+                Log.d(TAG, "================= application is logging remote participant left event =================");
+                if (event.getIdentifiers().size() >= 1) {
+                    headerViewData.setTitle("Custom title changed:: Participant count " + event.getIdentifiers().size());
+                    headerViewData.setSubtitle("Custom subtitle changed:: Participant count " + event.getIdentifiers().size());
+                } else {
+                    headerViewData.setTitle("Custom title :: waiting for others to join");
+                    headerViewData.setSubtitle("Custom subtitle :: no subtitle to show");
+                }
+            });
             callComposite.addOnCallStateChangedEventHandler((callStateChangedEvent) -> {
                 Log.d(TAG, "================= application is logging call state change =================");
                 Log.d(TAG, callStateChangedEvent.getCode().toString());

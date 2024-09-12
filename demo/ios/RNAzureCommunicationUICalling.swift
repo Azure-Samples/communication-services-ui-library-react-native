@@ -17,6 +17,7 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
 
     private var tokenRefresherHandler: TokenRefreshHandler?
     private var callComposite: CallComposite?
+    private var headerViewData: CallScreenHeaderViewData?
 
     override static func requiresMainQueueSetup() -> Bool {
         return false
@@ -136,7 +137,10 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
         var mode: LeaveCallConfirmationMode = disableLeaveCallConfirmation ? LeaveCallConfirmationMode.alwaysDisabled : LeaveCallConfirmationMode.alwaysEnabled
 
         callScreenControlBarOptions = CallScreenControlBarOptions(leaveCallConfirmationMode: mode)
-        callScreenOptions = CallScreenOptions(controlBarOptions: callScreenControlBarOptions)
+        headerViewData = CallScreenHeaderViewData(title: "Custom title",
+                                                      subtitle: "Custom subtitle")
+        callScreenOptions = CallScreenOptions(controlBarOptions: callScreenControlBarOptions,
+                                              headerViewData: headerViewData)
         
         let callCompositeOptions: CallCompositeOptions
         callCompositeOptions = CallCompositeOptions(localization: localizationConfig, 
@@ -164,7 +168,15 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
             }
             self.onRemoteParticipantJoined(resolve, reject)(callComposite, communicationIds, remoteAvatar)
         }
+        let onRemoteParticipantLeftHandler: ([CommunicationIdentifier]) -> Void = { [weak callComposite] communicationIds in
+            guard let callComposite = callComposite else {
+                return
+            }
+            self.onRemoteParticipantLeft(resolve, reject)(callComposite, communicationIds)
+        }
+       
         callComposite.events.onRemoteParticipantJoined = onRemoteParticipantJoinedHandler
+        callComposite.events.onRemoteParticipantLeft = onRemoteParticipantLeftHandler
         callComposite.events.onDismissed = { dismissedEvent in
             print("ReactNativeDemoView::getEventsHandler::onDismissed \(dismissedEvent)")
           callComposite.dismiss()
@@ -264,6 +276,10 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
                                    _ reject: @escaping RCTPromiseRejectBlock) -> ((CallComposite, [CommunicationIdentifier], AnyObject?) -> Void) {
         return { (callComposite: CallComposite, identifiers: [CommunicationIdentifier], remoteAvatar: AnyObject?) -> Void in
             print("ReactNativeDemoView::getEventsHandler::onRemoteParticipantJoined \(identifiers)")
+          if self.headerViewData != nil && identifiers.count >= 1 {
+            self.headerViewData?.title = "Custom title updated with participant \(identifiers.count)"
+            self.headerViewData?.subtitle = "Custom subtitle updated with participant \(identifiers.count)"
+          }
             guard let remoteAvatar = remoteAvatar, let remoteAvatarImage = RCTConvert.uiImage(remoteAvatar) else {
                 return
             }
@@ -272,6 +288,19 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
                                                                     remoteAvatar: remoteAvatarImage)
         }
     }
+  
+    func onRemoteParticipantLeft(_ resolve: @escaping RCTPromiseResolveBlock,
+                                 _ reject: @escaping RCTPromiseRejectBlock) -> ((CallComposite, [CommunicationIdentifier]) -> Void) {
+      return { (callComposite: CallComposite, identifiers: [CommunicationIdentifier]) -> Void in
+          print("ReactNativeDemoView::getEventsHandler::onRemoteParticipantLeft \(identifiers)")
+          
+          if self.headerViewData != nil && identifiers.count == 0 {
+            self.headerViewData?.title = "Custom title updated"
+            self.headerViewData?.subtitle = "Custom subtitle updated"
+          }
+        
+      }
+  }
 }
 
 enum RNCallCompositeConnectionError: Error {

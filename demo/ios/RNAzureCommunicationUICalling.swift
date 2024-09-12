@@ -156,7 +156,7 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
         guard let callComposite = callComposite else {
                 return
             }
-        callComposite.events.onError = onError(reject)
+        callComposite.events.onError = onError(resolve, reject)
         
         let onRemoteParticipantJoinedHandler: ([CommunicationIdentifier]) -> Void = { [weak callComposite] communicationIds in
             guard let callComposite = callComposite else {
@@ -250,13 +250,12 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
         }
     }
     
-    func onError(_ reject: @escaping RCTPromiseRejectBlock) -> ((CallCompositeError) -> Void) {
+    func onError(_ resolve: @escaping RCTPromiseResolveBlock,
+                 _ reject: @escaping RCTPromiseRejectBlock) -> ((CallCompositeError) -> Void) {
         return { (error: CallCompositeError) -> Void in
             print("ReactNativeDemoView::getEventsHandler::onError \(error)")
             print("ReactNativeDemoView error.code \(error.code)")
-            reject(error.code,
-                   error.error?.localizedDescription ?? "Unknown error",
-                   error.error)
+            resolve(error.error?.localizedDescription ?? "Unknown error")
         }
     }
     

@@ -187,7 +187,7 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
 
             CommunicationTokenCredential communicationTokenCredential = new CommunicationTokenCredential(communicationTokenRefreshOptions);
 
-            CallComposite callComposite = new CallCompositeBuilder()
+            callComposite = new CallCompositeBuilder()
                     .localization(new CallCompositeLocalizationOptions(Locale.forLanguageTag(selectedLanguage), layoutDirection))
                     .setupScreenOrientation(getCompositeDefinedOrientation(setupOrientation))
                     .callScreenOrientation(getCompositeDefinedOrientation(callOrientation))

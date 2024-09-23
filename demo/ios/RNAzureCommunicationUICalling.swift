@@ -179,7 +179,6 @@ class RNAzureCommunicationUICalling: RCTEventEmitter {
         callComposite.events.onRemoteParticipantLeft = onRemoteParticipantLeftHandler
         callComposite.events.onDismissed = { dismissedEvent in
             print("ReactNativeDemoView::getEventsHandler::onDismissed \(dismissedEvent)")
-          callComposite.dismiss()
         }
         callComposite.events.onCallStateChanged = { [weak callComposite] callState in
             print("ReactNativeDemoView::getEventsHandler::onCallStateChanged \(callState)")

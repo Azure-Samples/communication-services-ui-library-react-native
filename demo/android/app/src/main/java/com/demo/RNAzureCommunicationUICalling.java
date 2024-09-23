@@ -151,9 +151,6 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
         promise.resolve(map);
     }
     
-    @ReactMethod
-    public void removeListeners(Integer count) {}
-
     public void launchComposite(String displayName, String meetingInput, ReadableMap localAvatarImageResource,
                                 String title, String subtitle, String selectedLanguage, boolean isRightToLeft, boolean disableLeaveCallConfirmation, ReadableMap remoteAvatarImageResource,
                                 ReadableMap orientationOptions,
@@ -260,7 +257,6 @@ public class RNAzureCommunicationUICalling extends ReactContextBaseJavaModule {
 
             callComposite.addOnDismissedEventHandler((dismissedEvent) -> {
                 Log.d(TAG, "================= application is logging call composite dismissed =================");
-                callComposite.dismiss();
             });   
 
             if (URLUtil.isValidUrl(meetingInput.trim())) {

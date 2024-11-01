@@ -12,15 +12,15 @@ Please refer to our native [UI Library overview](https://docs.microsoft.com/en-u
 
 ## ❤️ Feedback
 
-We appreciate your feedback and energy helping us improve our services. [If you've tried the service, please give us feedback through this survey](https://microsoft.qualtrics.com/jfe/form/SV_9WTOR2ItSo0oFee). 
+We appreciate your feedback and energy helping us improve our services. [If you&#39;ve tried the service, please give us feedback through this survey](https://microsoft.qualtrics.com/jfe/form/SV_9WTOR2ItSo0oFee).
 
-## Prerequisites 
+## Prerequisites
 
-An Azure account with an active subscription. Create an account for free. 
-A deployed Communication Services resource. Create a Communication Services resource. 
-An Authentication Endpoint that will return the Azure Communication Services Token. See example or clone the code. 
+An Azure account with an active subscription. Create an account for free.
+A deployed Communication Services resource. Create a Communication Services resource.
+An Authentication Endpoint that will return the Azure Communication Services Token. See example or clone the code.
 
-Node, Watchman, and React Native CLI: please refer to [React Native environment setup guide](https://reactnative.dev/docs/environment-setup). 
+Node, Watchman, and React Native CLI: please refer to [React Native environment setup guide](https://reactnative.dev/docs/environment-setup).
 
 Yarn: refer to [installation guide](https://classic.yarnpkg.com/lang/en/docs/install)
 
@@ -37,50 +37,56 @@ Navigate to `demo/`:
 1. Run `yarn install`
 
 Install iOS app dependencies:
+
 1. In Terminal, navigate to `demo/ios/`:
 2. Run `pod install --repo-update`
 
 Build android app dependencies:
+
 1. In Terminal, navigate to `demo/android/`:
 2. Run `./gradlew build`
 
 Navigate back to `demo/`
+
 1. Run `yarn react-native start`
 2. Open another Terminal, navigate to `demo/` folder, and run `yarn react-native run-ios` or `yarn react-native run-android`
- 
-Alternatively, you can also run the iOS app by launching Xcode from the `.xcworkspace` file, and run the app with scheme `demo` on your simulator or iOS device. 
 
-To run Android app, you can also launch Android Studio and run on Android emulator or Android device after syncing up gradle. There are two ways to sync gradle either with a command in the android folder`./gradlew build` or via android studio.
+Alternatively, you can also run the iOS app by launching Xcode from the `.xcworkspace` file, and run the app with scheme `demo` on your simulator or iOS device.
+
+To run Android app, you can also launch Android Studio and run on Android emulator or Android device after syncing up gradle. There are two ways to sync gradle either with a command in the android folder `./gradlew build` or via android studio.
 
 ## Key Sample Highlights
+
 To integrate the native UI Library with React Native in this sample, a few key steps were taken as described below:
- 
-### iOS 
+
+### iOS
 
 After installing the package and dependencies with CocoaPods from the step above, modify the Podfile in the `/ios` filder as such:
+
 ```ruby
-platform :ios, '14.0' 
+platform :ios, '16.0' 
 target 'demo' do 
   use_frameworks! 
-  pod 'AzureCommunicationUICalling', '1.11.0' 
+  pod 'AzureCommunicationUICalling', '1.12.0' 
   ... 
 
   # Note: disable the line below since we've enabled use_frameworks! 
   # use_flipper!() 
   ... 
 end 
-``` 
+```
 
-Navigate to the `ios/` folder and open the `.xcworkspace` file with Xcode. 
+Navigate to the `ios/` folder and open the `.xcworkspace` file with Xcode.
 
-Set iOS Deployment Target in Build Settings for the main project to minimum iOS 14.0: 
+Set iOS Deployment Target in Build Settings for the main project to minimum iOS 16.0:
 
 ![ae0f2bf7-17f3-435c-828a-e7bfaf1b3e2e](https://user-images.githubusercontent.com/9044372/180568611-71d671c2-6bd4-4542-9d66-87fc9da8eddd.jpg)
 
-Request access to the microphone, camera, etc. 
-To access the device's hardware, update your app's Information Property List (`Info.plist`). Set the associated value to a `string` that will be included in the dialog the system uses to request access from the user. 
- 
-Right-click the `Info.plist` entry of the project tree and select **Open As** > **Source Code**. Add the following lines the top level `<dict>` section, and then save the file. 
+Request access to the microphone, camera, etc.
+To access the device's hardware, update your app's Information Property List (`Info.plist`). Set the associated value to a `string` that will be included in the dialog the system uses to request access from the user.
+
+Right-click the `Info.plist` entry of the project tree and select **Open As** > **Source Code**. Add the following lines the top level `<dict>` section, and then save the file.
+
 ```xml
 <key>NSCameraUsageDescription</key> 
 <string></string> 
@@ -92,12 +98,12 @@ To verify requesting the permission is added correctly, view the `Info.plist` as
 
 ![abcca137-6463-4e9a-8db4-b68df6db5ce8](https://user-images.githubusercontent.com/9044372/180568964-71348562-e9a6-4a5e-847e-537e58e376ce.jpg)
 
-Turn off Bitcode 
-Set `Enable Bitcode` option to `No` in the project `Build Settings`. To find the setting, you have to change the filter from `Basic` to `All`, you can also use the search bar on the right. 
+Turn off Bitcode
+Set `Enable Bitcode` option to `No` in the project `Build Settings`. To find the setting, you have to change the filter from `Basic` to `All`, you can also use the search bar on the right.
 
 ![MicrosoftTeams-image](https://user-images.githubusercontent.com/9044372/180569028-f3d86bdf-7016-4f37-8c3f-49332b0c7ef3.png)
- 
-### Android 
+
+### Android
 
 In your app level (**app folder**) `build.gradle`, add the following lines to the dependencies and android sections.
 
@@ -134,8 +140,8 @@ repositories {
 
 Sync project with gradle files. Either run `./gradlew build` or open the project in Android Studio (Android Studio -> File -> Sync Project With Gradle Files)
 
-
 ## Launching Composite
+
 The React native library supports all the same features as the native [UI composite](https://github.com/Azure/communication-ui-library-android). Call `startCallComposite` on the `RNAzureCommunicationUICalling` module from your React Native Javascript code, wrapping with `try-catch` statement to handle any errors.
 
 ```cs
@@ -157,10 +163,12 @@ try {
 ```
 
 ### Setup group call or Teams meeting options
+
 Depending on what type of Call/Meeting you would like to setup, use the appropriate meeting input. Replace `meetingInput` with either your group call ID or Teams meeting url.
 
 ## React native - native app bridging
-In order to support the communication between React Native and native Azure Communication UI library, bridging is needed for both iOS and Android. Please refer to the following bridging file guide for iOS and Android. 
+
+In order to support the communication between React Native and native Azure Communication UI library, bridging is needed for both iOS and Android. Please refer to the following bridging file guide for iOS and Android.
 
 [iOS bridging file guide](demo/ios/README.md)
 
